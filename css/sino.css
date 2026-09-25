@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: cadetblue; /* Color de respaldo */
+    background-image: url('/img/Silvana/r\ y\ s.png'); /* Ruta de la imagen */
+    background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que se repita la imagen */
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+}
+
+/* NAV */
+nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    margin: 5px 10px;
+  }
+  
+  nav ul li a {
+    color: #ff4d4d; /* rojo fuerte */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 1px solid #ff4d4d;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  
+  nav ul li a:hover {
+    background-color: #ff9999; /* rojo clarito */
+    color: white;
+    border-color: #ff9999;
+  }
+  
+p {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+button {
+    font-size: 1.5rem;
+    padding: 0.75em 1.5em;
+    margin: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#yesBtn {
+    background-color: #4caf50;
+    color: white;
+}
+
+#yesBtn:hover {
+    background-color: #45a049;
+}
+
+#noBtn {
+    background-color: #f44336;
+    color: white;
+    position: absolute;
+}
+
+#noBtn:hover {
+    background-color: #e53935;
+}

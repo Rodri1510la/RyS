@@ -1,0 +1,30 @@
+nav {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente negro */
+    padding: 10px 0; /* Espaciado interno */
+    position: fixed; /* Fijar la barra de navegación en la parte superior de la página */
+    width: 100%; /* Ancho completo */
+    top: 0; /* Pegado a la parte superior */
+    z-index: 1000; /* Asegura que la barra de navegación esté en la parte superior de otros elementos */
+  }
+  
+  nav ul {
+    list-style-type: none; /* Elimina los marcadores de lista */
+    margin: 0; /* Elimina el margen predeterminado */
+    padding: 0; /* Elimina el relleno predeterminado */
+    display: flex; /* Utiliza flexbox para alinear los elementos */
+    
+  }
+  
+  nav ul li {
+    display: inline-block; /* Muestra los elementos de la lista en línea */
+    margin-right: 20px; /* Espaciado entre elementos */
+  }
+  
+  nav ul li a {
+    color: rgb(255, 0, 0); /* Color del texto */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    font-weight: bold; /* Texto en negrita */
+    padding: 10px 20px; /* Espaciado interno de los elementos */
+    border: 1px solid white; /* Borde blanco */
+    border-radius: 5px; /* Borde redondeado */
+  }

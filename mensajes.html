@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Bonito 💬</title>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJ9GKC0aZTJrFJUZYqAWfZFkH6gAMw0NA",
+      authDomain: "rodsilv-020324.firebaseapp.com",
+      databaseURL: "https://rodsilv-020324-default-rtdb.firebaseio.com",
+      projectId: "rodsilv-020324",
+      storageBucket: "rodsilv-020324.appspot.com",
+      messagingSenderId: "813682852258",
+      appId: "1:813682852258:web:186b3936944957d46932fb",
+      measurementId: "G-L72HCBN0Q0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+   function formatearHora(timestamp) {
+  const fecha = new Date(timestamp);
+  const dia = fecha.getDate().toString().padStart(2, '0');
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+  const año = fecha.getFullYear();
+  const horas = fecha.getHours().toString().padStart(2, '0');
+  const minutos = fecha.getMinutes().toString().padStart(2, '0');
+return `${dia}/${mes}/${año} ${horas}:${minutos}`;
+}
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const nombreInput = document.getElementById("nombre");
+
+      // Cargar el nombre guardado si existe
+      const nombreGuardado = localStorage.getItem("nombreChat");
+      if (nombreGuardado) {
+        nombreInput.value = nombreGuardado;
+      }
+
+      // Guardar el nombre cuando se cambia
+      nombreInput.addEventListener("change", () => {
+        localStorage.setItem("nombreChat", nombreInput.value);
+      });
+
+      const mensajeInput = document.getElementById("mensaje");
+      const chatBox = document.getElementById("chat-box");
+      const enviarBtn = document.getElementById("enviar");
+
+      enviarBtn.addEventListener("click", () => {
+        const nombre = nombreInput.value.trim();
+        const mensaje = mensajeInput.value.trim();
+        if (nombre && mensaje) {
+          push(ref(db, "mensajes"), {
+            nombre,
+            mensaje,
+            timestamp: Date.now()
+          });
+          mensajeInput.value = "";
+        }
+      });
+
+      onChildAdded(ref(db, "mensajes"), (data) => {
+        const msg = data.val();
+        const clase = msg.nombre === "Silvana" ? "silvana" : "rodrigo";
+        const hora = formatearHora(msg.timestamp);
+
+        const div = document.createElement("div");
+        div.className = `message ${clase} fade-in`;
+       div.innerHTML = `
+        <strong>${msg.nombre}:</strong> ${msg.mensaje}
+        <div class="hora">${hora}</div>
+      `;
+
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+    });
+  </script>
+
+  <style>
+   body {
+  font-family: 'Segoe UI', sans-serif;
+  background: url("img/fondo.jpg") no-repeat center center fixed;
+  background-size: cover;
+  padding: 80px 10px 20px;
+  margin: 0;
+}
+
+    nav {
+      background: linear-gradient(to right, #ff4d88, #ff6666);
+      padding: 15px 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      margin: 5px 10px;
+    }
+
+    nav ul li a {
+      background-color: white;
+      color: #ff3366;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 20px;
+      margin: 5px;
+      transition: 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav ul li a:hover {
+      background-color: #ff3366;
+      color: white;
+    }
+
+    h2 {
+      text-align: center;
+      color: #002B7F;
+      margin-bottom: 15px;
+    }
+
+    #chat-box {
+      background: white;
+      border: 1px solid #ccc;
+      height: 70vh;
+      overflow-y: auto;
+      padding: 20px;
+      margin: 0 auto 20px;
+      max-width: 95%;
+      width: 100%;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      max-width: 95%;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    select, input[type="text"] {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    button {
+      padding: 12px 25px;
+      background-color: #002B7F;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0044aa;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 12px 18px;
+      border-radius: 20px;
+      line-height: 1.5;
+      display: inline-block;
+      font-size: 16px;
+      word-wrap: break-word;
+      animation: fadeIn 0.4s ease;
+      position: relative;
+      margin: 5px 0;
+    }
+
+    .silvana {
+      background-color: #ffe6f0;
+      color: #99004d;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+
+    .rodrigo {
+      background-color: #e6f0ff;
+      color: #003380;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+
+    .hora {
+      font-size: 11px;
+      color: #666;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">R y S</a></li>
+      <li><a href="fechas.html">Fechas Bonitas</a></li>
+      <li><a href="misilv.html">Mi Silv</a></li>
+      <li><a href="record.html">Record</a></li>
+      <li><a href="chat.html">Mensajes</a></li>
+      <li><a href="fc.html">Feliz Cumpleaños</a></li>
+      <li><a href="aniversario.html">Aniversario</a></li>
+      <li><a href="love.html">A...Mochito</a></li>
+      <li><a href="sino.html">Chito chito</a></li>
+      <li><a href="merry.html">Navidad</a></li>
+      <li><a href="sv.html">San Valentín</a></li>
+      <li><a href="notas.html">Notas</a></li>
+      <li><a href="rod.html">Rod</a></li>
+    </ul>
+  </nav>
+
+  <h2>Chat R y S</h2>
+
+  <div id="chat-box"></div>
+
+  <div class="chat-controls">
+    <select id="nombre">
+      <option value="Silvana">🦉 Silvana</option>
+      <option value="Rodrigo">🐥 Rodrigo</option>
+    </select>
+    <input type="text" id="mensaje" placeholder="Escribe un mensaje">
+    <button id="enviar">Enviar</button>
+  </div>
+
+</body>
+</html>

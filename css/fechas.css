@@ -1,0 +1,226 @@
+/* RESET Y CONFIGURACIÓN GENERAL */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-family: 'Oswald', sans-serif;
+  scroll-behavior: smooth;
+  background-color: #505050;
+  background-image: url('../img/bdr.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  color: #000;
+  min-height: 100vh;
+  padding-top: 80px;
+}
+/* NAV */
+nav {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 15px 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  margin: 5px 10px;
+}
+
+.teamo-back {
+  background: linear-gradient(135deg, #ffcccc, #ffe6e6);
+  color: #000;
+}
+
+nav ul li a {
+  color: #ff4d4d; /* rojo fuerte */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: 1px solid #ff4d4d;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: #ff9999; /* rojo clarito */
+  color: white;
+  border-color: #ff9999;
+}
+
+
+/* TITULO */
+h1 {
+  font-size: 3rem;
+  color: white;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 span {
+  color: #ff4d6d;
+}
+
+/* GRID DE CARDS */
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 20px 60px;
+}
+
+/* FLIP CARD */
+.flip-card {
+  width: 320px;
+  height: 500px;
+  perspective: 2000px;
+}
+
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.8s ease;
+  transform-style: preserve-3d;
+  border-radius: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.flip-card-front {
+  background-size: cover;
+  background-position: center;
+}
+
+.flip-card-back {
+  padding: 30px;
+  text-align: center;
+  transform: rotateY(180deg);
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.5em;
+}
+.flip-card-back .fecha {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+}
+
+/* COLORES INDIVIDUALES */
+.boca-back     { background-color: #B1CFC8; }
+.summer-back   { background-color: #FFD700; }
+.christmas-back{ background-color: #FF6347; }
+.birthday-back { background-color: #BA55D3; }
+.cora-back     { background-color: #E3AEB1; }
+.basket-back   { background-color: #C3C1E1; }
+.parque-back {
+  background-color: #9c27b0; /* morado bonito */
+  color: white;
+  padding: 20px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.cine-back {
+  background-color: #3f51b5; /* azul suave */
+  color: white;
+  padding: 20px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.playa-back {
+  background-color: #009688; /* verde agua */
+  color: white;
+  padding: 20px;
+  font-family: 'Oswald', sans-serif;
+}
+
+
+/* ALERT PERSONALIZADO (opcional) */
+#customAlert {
+  display: none;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.9);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Bungee', cursive;
+  font-size: 24px;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+#customAlert button {
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+}
+
+/* BECHITO FOOTER */
+.footer-image {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-image img {
+  width: 250px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .flip-card {
+    width: 90%;
+    height: 460px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav ul li {
+    margin-bottom: 10px;
+  }
+}

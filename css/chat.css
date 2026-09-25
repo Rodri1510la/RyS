@@ -1,0 +1,168 @@
+
+html, body {
+    height: 100%;
+}/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background: url('../img/mixgift.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+/* NAV */
+nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+  
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+  
+nav ul li {
+    margin: 5px 10px;
+}
+  
+nav ul li a {
+    color: #ff4d4d; /* rojo fuerte */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 1px solid #ff4d4d;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+  
+nav ul li a:hover {
+    background-color: #ff9999; /* rojo clarito */
+    color: white;
+    border-color: #ff9999;
+}
+
+/* Contenedor general para dos chats */
+.dual-chat-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+/* Estilos para los chats individuales */
+.chat-container {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 720px;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+/* Estilo alternativo para el segundo chat */
+.chat-container.chat2 {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Título dentro del chat */
+.chat-container h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: pink;
+}
+
+/* Estilos de los mensajes */
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.message.sent {
+    background-color: red;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.message.received {
+    background-color: #333;
+    align-self: flex-start;
+}
+
+/* Estilos del narrador */
+.message.narrador {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-style: italic;
+}
+
+/* Estilos de la marca de tiempo */
+.timestamp {
+    font-size: 0.8em;
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    opacity: 0.7;
+}
+
+/* Estilos de los audios */
+.voice-note {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.voice-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.voice-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.voice-controls img {
+    width: 20px;
+}
+
+input[type="range"] {
+    width: 100px;
+}
+
+/* Scrollbar personalizado */
+.chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: red;
+    border-radius: 10px;
+}
+
+/* Responsive: en pantallas pequeñas, uno debajo del otro */
+@media (max-width: 768px) {
+    .dual-chat-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+}

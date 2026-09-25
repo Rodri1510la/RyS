@@ -1,0 +1,94 @@
+/* Fondo con GIF */
+body {
+    background: url('../img/ddup.gif') no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+}
+
+/* NAV */
+nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 5px 10px;
+}
+
+nav ul li a {
+    color: #ff4d4d; /* rojo fuerte */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 1px solid #ff4d4d;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #ff9999; /* rojo clarito */
+    color: white;
+    border-color: #ff9999;
+}
+
+/* Contenedor de notas */
+.container {
+    max-width: 900px;
+    margin: 80px auto 20px; /* Espacio debajo del navbar */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Notas */
+.note {
+    width: 300px;
+    min-height: 200px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Diferentes colores para las notas */
+.note-red { background-color: #ffc0c0; } /* Rojo claro */
+.note-blue { background-color: #c0d9ff; } /* Azul claro */
+.note-green { background-color: #c0ffc0; } /* Verde claro */
+.note-yellow { background-color: #fff0c0; } /* Amarillo claro */
+.note-purple {
+    background-color: #c77dff;
+}
+
+/* Títulos de notas */
+.note h2 {
+    margin-top: 0;
+    color: #d32f2f;
+    text-align: center;
+}
+
+/* Para mejorar la responsividad */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .note {
+        width: 90%;
+    }
+}
