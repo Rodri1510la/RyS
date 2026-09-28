@@ -52,7 +52,7 @@ npm start
 
 ## 🌐 Deployment
 
-Este sitio está configurado para desplegarse automáticamente en Azure Static Web Apps cuando se hace push a la rama `main`.
+Este sitio es estático y se despliega en Vercel (ver `vercel.json`: se sirve desde la raíz, sin build).
 
 ## 📁 Estructura del Proyecto
 
@@ -60,11 +60,11 @@ Este sitio está configurado para desplegarse automáticamente en Azure Static W
 RodySilv/
 ├── index.html              # Página principal
 ├── css/                    # Estilos CSS
-├── js/                     # Scripts JavaScript
+├── js/                     # Scripts JavaScript (nav.js inyecta el menú en todas las páginas)
 ├── img/                    # Imágenes y recursos
 ├── audio/                  # Archivos de audio
 ├── scss/                   # Archivos SCSS
-└── .github/workflows/      # Configuración CI/CD
+└── vercel.json             # Configuración de despliegue
 ```
 
 ## 💝 Características Especiales

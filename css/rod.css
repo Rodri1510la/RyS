@@ -1,49 +1,12 @@
 body {
     font-family: Arial, sans-serif;
-    background: url('../img/rod.png') no-repeat center center fixed;
+    background: url('../img/rod.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
 }
 
-/* NAV */
-nav {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 15px 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-}
-  
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-}
-  
-nav ul li {
-    margin: 5px 10px;
-}
-  
-nav ul li a {
-    color: #ff4d4d; /* rojo fuerte */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 8px 16px;
-    border: 1px solid #ff4d4d;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-  
-nav ul li a:hover {
-    background-color: #ff9999; /* rojo clarito */
-    color: white;
-    border-color: #ff9999;
-}
+
 
 .container {
     width: 80%;
@@ -95,3 +58,33 @@ ul.lista-bonita li::before {
 p{
     color: #dddddd;
 }
+/* ---- Mejora visual: lista con estilo elegante ---- */
+body { font-family: 'Oswald', Arial, sans-serif; }
+body::before {                                   /* oscurece la foto de fondo */
+    content: ""; position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(rgba(10, 0, 8, 0.65), rgba(30, 0, 20, 0.8));
+}
+.container {
+    position: relative; z-index: 1;
+    background: rgba(20, 8, 16, 0.75);
+    border: 1px solid rgba(255, 158, 187, 0.25);
+    backdrop-filter: blur(8px);
+    border-radius: 22px;
+    box-shadow: 0 10px 40px rgba(255, 77, 109, 0.2);
+}
+h1 {
+    font-family: 'Great Vibes', cursive; font-weight: 400;
+    font-size: clamp(2rem, 7vw, 3rem); overflow-wrap: anywhere;
+    background: linear-gradient(90deg, #ff9ebb, #ff4d6d);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+ul.lista-bonita li {
+    background: rgba(255, 77, 109, 0.14);
+    border: 1px solid rgba(255, 158, 187, 0.3);
+    border-left: 4px solid #ff4d6d;
+    box-shadow: none;
+    font-weight: 300; line-height: 1.5; font-size: 1.05rem;
+    transition: transform 0.3s, background 0.3s, opacity 0.7s ease;
+}
+ul.lista-bonita li::before { content: "\2764"; color: #ff4d6d; flex: none; }
+ul.lista-bonita li:hover { background: rgba(255, 77, 109, 0.3); transform: translateX(6px) scale(1.01); }

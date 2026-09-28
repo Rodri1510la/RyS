@@ -6,22 +6,30 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .card {
   background: #ffffff;
   border-radius: 20px;
-  padding: 40px;
+  padding: 32px 24px;
   text-align: center;
   max-width: 600px;
+  width: 94%;
+  margin: 16px auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .card h1 {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 5vw, 2rem);
   color: #333;
   margin-bottom: 30px;
+}
+
+.card p,
+.card h4,
+.card h6 {
+  word-break: break-word;
 }
 
 .gif {
@@ -29,3 +37,24 @@ body {
   max-width: 400px;
   border-radius: 12px;
 }
+
+#musicBtn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 9999;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(204, 0, 0, 0.85);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- Mejora visual: entrada suave y tarjeta elegante ---- */
+body { background: radial-gradient(circle at 50% 20%, #24101c, #07070e 70%); }
+.card { background: linear-gradient(160deg, #fff, #ffeef2); border: 1px solid rgba(255, 158, 187, 0.4); }
+.card.reveal { transition-duration: 1.6s; }

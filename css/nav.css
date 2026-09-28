@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Boton "Menu" flotante - lo inyecta js/nav.js en todas las paginas.
+   Lleva a menu.html (la portada con tarjetas). Ya no hay barra de
+   navegacion: no empuja ni tapa el contenido.
+   ========================================================================== */
+
+.menu-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  font: bold 0.95rem 'Segoe UI', Arial, sans-serif;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu-btn:hover,
+.menu-btn:focus-visible {
+  background: #ff4d4d;
+  color: #fff;
+}

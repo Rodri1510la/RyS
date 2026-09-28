@@ -11,7 +11,6 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
     background-color: #ffe5e5;
 }
 
@@ -21,8 +20,13 @@ body {
     text-align: center;
     align-items: center;
     gap: 20px;
+    width: 100%;
     max-width: 500px;
-    margin: 20px;
+    /* Antes era align-items:center en el body: cuando el contenido es mas
+       alto que el viewport se desborda por arriba y por abajo y no se puede
+       scrollear hasta el inicio. margin:auto centra sin ese problema. */
+    margin: auto;
+    padding: 0 20px 40px;
 }
 
 .container .tenor-gif-embed {
@@ -45,41 +49,16 @@ body {
 
 }
 
-/* NAV */
-nav {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 15px 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
+/* ---- Mejora visual ---- */
+body { background: linear-gradient(160deg, #ffe5ec, #ffc2d1 60%, #ffb3c6); }
+.container { position: relative; z-index: 1; padding-top: 12px; }
+.container h1 { font-family: 'Great Vibes', cursive; font-weight: 400; font-size: clamp(2.2rem, 8vw, 3rem); color: #a4133c; }
+.container p { color: #7a1f3d; font-family: 'Oswald', sans-serif; font-weight: 300; }
+.container .tenor-gif-embed { border-radius: 18px; overflow: hidden; box-shadow: 0 8px 26px rgba(164, 19, 60, 0.3); }
+.btn a {
+    font-family: 'Oswald', sans-serif; font-weight: 600; border-radius: 999px; padding: 10px 30px;
+    box-shadow: 0 4px 14px rgba(164, 19, 60, 0.25);
+    transition: transform 0.2s, background 0.2s, color 0.2s;
 }
-
-nav ul li {
-  margin: 5px 10px;
-}
-
-nav ul li a {
-  color: #ff4d4d; /* rojo fuerte */
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: 1px solid #ff4d4d;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-nav ul li a:hover {
-  background-color: #ff9999; /* rojo clarito */
-  color: white;
-  border-color: #ff9999;
-}
+.btn a:hover { transform: translateY(-3px) scale(1.07); background: #c9184a; color: #fff; }

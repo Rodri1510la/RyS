@@ -32,52 +32,18 @@ height: auto;
     margin-bottom: 20px; /* Reducido desde 80px */
     color: rgb(255, 255, 255);
 }
-  
+
   h1 span {
     color: rgb(210, 23, 23);
   }
 
 
-/* NAV */
-nav {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 15px 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
-}
 
-nav ul li {
-  margin: 5px 10px;
-}
 
-nav ul li a {
-  color: #ff4d4d; /* rojo fuerte */
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: 1px solid #ff4d4d;
-  border-radius: 8px;
-  transition: 0.3s;
-}
 
-nav ul li a:hover {
-  background-color: #ff9999; /* rojo clarito */
-  color: white;
-  border-color: #ff9999;
-}
 
-  
+
   *{
     margin:0;
     padding: 0;
@@ -193,3 +159,8 @@ p:hover {
         width: 80%;
     }
 }
+/* El velo rojo tapaba la foto al pasar el mouse y bloqueaba el clic del visor. */
+.overlay { pointer-events: none; }
+.imagen { overflow: hidden; border-radius: 10px; }
+.imagen img { transition: transform 0.5s ease; }
+.imagen:hover img { transform: scale(1.06); }

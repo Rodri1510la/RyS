@@ -1,0 +1,118 @@
+/* Portada con tarjetas (menu.html) */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  color: #fff;
+  background: linear-gradient(160deg, #1a0a12 0%, #3b1226 50%, #12121f 100%) fixed;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 16px 10px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 8vw, 3.6rem);
+  letter-spacing: 1px;
+}
+
+.hero h1 span { color: #ff4d6d; }
+
+.hero p {
+  margin: 8px 0 0;
+  color: #ffc2d1;
+  font-size: 1.1rem;
+}
+
+.menu {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 16px 30px;
+}
+
+.menu h2 {
+  margin: 28px 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ffc2d1;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 110px;
+  padding: 16px 10px;
+  border-radius: 16px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  background: var(--c, #ff4d6d);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  outline: 2px solid #fff;
+}
+
+.card .ico { font-size: 2rem; line-height: 1; }
+
+.c-rojo   { --c: linear-gradient(135deg, #e63946, #a4161a); }
+.c-rosa   { --c: linear-gradient(135deg, #ff6b9d, #c9184a); }
+.c-morado { --c: linear-gradient(135deg, #7b2cbf, #3c096c); }
+.c-azul   { --c: linear-gradient(135deg, #4361ee, #1d2d8a); }
+.c-verde  { --c: linear-gradient(135deg, #2d936c, #14532d); }
+.c-dorado { --c: linear-gradient(135deg, #f4a261, #b5651d); }
+
+.card { background: var(--c); }
+
+footer {
+  text-align: center;
+  padding: 10px 16px 40px;
+  color: #b58a99;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Animaciones de entrada escalonadas y hover rapido (efectos.css pone la transicion lenta al reveal). */
+.card.reveal.visible { transition: transform 0.2s, box-shadow 0.2s, opacity 0.6s; }
+.cards .card:nth-child(2) { transition-delay: 0.08s; }
+.cards .card:nth-child(3) { transition-delay: 0.16s; }
+.cards .card:nth-child(4) { transition-delay: 0.24s; }
+.cards .card:nth-child(5) { transition-delay: 0.32s; }
+.cards .card.reveal.visible:hover { transition-delay: 0s; }
+
+.hero h1 {
+  font-family: 'Great Vibes', cursive;
+  font-weight: 400;
+  font-size: clamp(3.4rem, 14vw, 6rem);
+  background: linear-gradient(90deg, #ff9ebb, #ff4d6d, #ffb3c6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero h1 span { -webkit-text-fill-color: #ff4d6d; }
+.menu, .hero { position: relative; z-index: 1; }

@@ -1,0 +1,111 @@
+/* Efectos compartidos: aparicion al hacer scroll, corazones flotantes y visor de fotos.
+   Se activan con js/efectos.js. */
+
+/* ---------- Aparicion al hacer scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .heart-float { display: none; }
+}
+
+/* ---------- Corazones flotantes de fondo ---------- */
+.hearts-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heart-float {
+  position: absolute;
+  bottom: -40px;
+  opacity: 0;
+  animation: heart-up linear forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes heart-up {
+  0%   { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
+  10%  { opacity: 0.55; }
+  90%  { opacity: 0.35; }
+  100% { transform: translateY(-110vh) translateX(var(--dx, 30px)) scale(1.2); opacity: 0; }
+}
+
+/* ---------- Visor de fotos ---------- */
+[data-zoom] { cursor: zoom-in; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(10, 0, 5, 0.92);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox figure {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.lightbox.open figure { transform: scale(1); }
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 82vh;
+  border-radius: 14px;
+  box-shadow: 0 10px 50px rgba(255, 77, 109, 0.35);
+}
+
+.lightbox figcaption {
+  margin-top: 12px;
+  color: #ffc2d1;
+  font: 1.1rem 'Segoe UI', Arial, sans-serif;
+}
+
+.lightbox button {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.lightbox button:hover,
+.lightbox button:focus-visible { background: #ff4d6d; outline: none; }
+
+.lb-close { top: 16px; right: 16px; }
+.lb-prev  { left: 14px; top: 50%; transform: translateY(-50%); }
+.lb-next  { right: 14px; top: 50%; transform: translateY(-50%); }

@@ -1,64 +1,32 @@
+/* Antes había dos reglas body{} seguidas: la segunda (línea 13) declaraba
+   linear-gradient(...), url(bday.gif) y la línea 16 volvía a poner
+   background-image, matando el oscurecido y el bday.gif (además estaba como
+   ruta relativa rota). Ahora hay una sola regla con el degradado correcto. */
 body {
-    color: #000000;
+    color: #ffffff;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 32px 0;
+    padding: 24px 16px 48px;
     font-family: 'Bungee', cursive;
-  }
-  body{
-    height: 100vh;
-    background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(bday.gif);
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+                url('../img/Record/basketduo.jpeg');
     background-position: center;
-    background-size: cover ;
-    background-image: url('../img/Record/basketduo.jpeg') ;
-
-}
-/* NAV */
-nav {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 15px 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
-}
 
-nav ul li {
-  margin: 5px 10px;
-}
 
-nav ul li a {
-  color: #ff4d4d; /* rojo fuerte */
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: 1px solid #ff4d4d;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-nav ul li a:hover {
-  background-color: #ff9999; /* rojo clarito */
-  color: white;
-  border-color: #ff9999;
-}
 
 
   .swiper-container {
     width: 100%;
-    height: 100%;
+    /* height:100% dentro de un body con min-height:100vh empujaba el
+       carrusel y sus dots de paginacion por debajo del borde inferior. */
+    height: min(65vh, 560px);
   }
   .swiper-slide {
     text-align: center;
@@ -83,13 +51,24 @@ nav ul li a:hover {
     max-width: 100%; /* Ajusta el ancho máximo para que no exceda el contenedor */
   }
   h1 {
-    font-size: 4rem;
+    font-size: clamp(1.8rem, 6vw, 4rem);
     margin-top: 0;
-    margin-bottom: 80px;
+    margin-bottom: 32px;
     color: rgb(255, 255, 255);
-    
+    text-align: center;
   }
-  
+
   h1 span {
-    color: rgb(210, 23, 23);
+    color: rgb(255, 90, 90);
   }
+
+/* ---- Mejora visual ---- */
+h1 { font-family: 'Great Vibes', cursive; font-weight: 400; font-size: clamp(3rem, 11vw, 5.5rem); text-shadow: 0 0 26px rgba(255, 77, 109, 0.6); }
+h1 span { display: inline-block; animation: latidoRec 1.6s ease-in-out infinite; }
+@keyframes latidoRec { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+.swiper-slide img {
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(255, 77, 109, 0.35);
+    border: 4px solid rgba(255, 255, 255, 0.85);
+}
+.swiper-container { position: relative; z-index: 1; }

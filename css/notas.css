@@ -1,57 +1,32 @@
 /* Fondo con GIF */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     background: url('../img/ddup.gif') no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, sans-serif;
 }
 
-/* NAV */
-nav {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 15px 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-}
 
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-}
 
-nav ul li {
-    margin: 5px 10px;
-}
 
-nav ul li a {
-    color: #ff4d4d; /* rojo fuerte */
-    text-decoration: none;
-    font-weight: bold;
-    padding: 8px 16px;
-    border: 1px solid #ff4d4d;
-    border-radius: 8px;
-    transition: 0.3s;
-}
 
-nav ul li a:hover {
-    background-color: #ff9999; /* rojo clarito */
-    color: white;
-    border-color: #ff9999;
-}
 
 /* Contenedor de notas */
 .container {
     max-width: 900px;
-    margin: 80px auto 20px; /* Espacio debajo del navbar */
+    /* El navbar fijo lo compensa css/nav.css con padding-top en el body:
+       antes Bootstrap.rounded margin 80px duplicaba ese espacio. */
+    margin: 8px auto 20px;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
+    flex-direction: row;
 }
 
 /* Notas */
@@ -92,3 +67,29 @@ nav ul li a:hover {
         width: 90%;
     }
 }
+
+/* ---- Mejora visual: notitas pegadas con inclinacion ---- */
+body { font-family: 'Oswald', Arial, sans-serif; }
+.container { position: relative; z-index: 1; gap: 28px; padding: 10px 16px 50px; }
+
+.note {
+    position: relative;
+    font-weight: 300;
+    line-height: 1.7;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.9s ease;
+}
+.note::before {                       /* la cinta adhesiva */
+    content: "";
+    position: absolute;
+    top: -12px; left: 50%;
+    width: 90px; height: 24px;
+    transform: translateX(-50%) rotate(-3deg);
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.note:nth-child(odd)  { transform: rotate(-1.6deg); }
+.note:nth-child(even) { transform: rotate(1.4deg); }
+.note.reveal:not(.visible) { transform: translateY(40px) rotate(0deg); }
+.note.visible:hover { transform: rotate(0deg) translateY(-8px) scale(1.03); box-shadow: 0 14px 30px rgba(0,0,0,0.35); }
+.note h2 { font-family: 'Great Vibes', cursive; font-weight: 400; font-size: 2.1rem; }
+.note strong { font-weight: 600; }

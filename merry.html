@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -7,28 +7,14 @@
     <title>Merry Christmas Tree!</title>
     <script src="./js/merry.js"></script>
     <link rel="stylesheet" href="./css/merry.css">
-</head>
+    <link rel="stylesheet" href="css/nav.css">
+  </head>
+
 
 <body translate="no">
-    <nav>
-        <ul>
-            <li><a href="index.html">R y S</a></li>
-            <li><a href="fechas.html">Fechas Bonitas</a></li>  
-            <li><a href="misilv.html">Mi Silv</a></li>
-            <li><a href="record.html">Record</a></li>
-            <li><a href="chat.html">Mensajes</a></li>
-            <li><a href="fc.html">Feliz Cumpleaños</a></li>
-            <li><a href="aniversario.html">Aniversario</a></li>
-            <li><a href="love.html">A...Mochito</a></li>
-            <li><a href="sino.html">Chito chito</a></li>
-            <li><a href="merry.html">Navidad</a></li>
-            <li><a href="sv.html">San Valentin</a></li>    
-            <li><a href="notas.html">Notas</a></li>        
-        </ul>
-    </nav>
     <br />
     <svg class="mainSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 0 800 600" style="visibility: visible;">
+        viewBox="0 0 800 700" style="visibility: visible;">
         <defs>
             <circle id="circ" class="particle" cx="0" cy="0" r="1"></circle>
             <path class="particle" id="star"
@@ -128,7 +114,9 @@
                 transform="matrix(1,0,0,1,609.6,464.1)"
                 style="translate: none; rotate: none; scale: none; transform-origin: 0px 0px; opacity: 0;"></circle>
         </g>
-        <foreignObject id="endMessage" x="0" y="550" width="800" height="250" style="opacity: 0;">
+        <!-- Antes y=550 height=250 con viewBox 0 0 800 600: el mensaje se
+             extendia hasta y=800, fuera del viewBox, y quedaba recortado. -->
+        <foreignObject id="endMessage" x="0" y="556" width="800" height="130" style="opacity: 0;">
             <span class="endMessage">
                 Feliz Navidad Chito BB🐣!!
             </span>
@@ -150,7 +138,7 @@
             transform="matrix(0,0,0,0,522.6302,435.2737)"
             style="translate: none; rotate: none; scale: none; transform-origin: 0px 0px; opacity: 0.7852;"></circle>
     </svg>
-    <script src="https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin3.min.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/DrawSVGPlugin3.min.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MotionPathPlugin.min.js"></script>
@@ -158,6 +146,21 @@
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/EasePack3.min.js"></script>
     <script id="rendered-js">
         (function () {
+            // Si cualquiera de los 6 CDNs falla, este bloque tiraba ReferenceError
+            // y el mensaje final (opacity:0 inline) se quedaba invisible para
+            // siempre. Se muestra igual como plan B.
+            function mostrarMensaje() {
+                var msg = document.getElementById("endMessage");
+                if (msg) msg.style.opacity = "1";
+            }
+            if (typeof gsap === "undefined" || typeof MorphSVGPlugin === "undefined"
+                || typeof MotionPathPlugin === "undefined" || typeof DrawSVGPlugin === "undefined"
+                || typeof Physics2DPlugin === "undefined") {
+                console.warn("[merry] GSAP o plugins no cargaron: se muestra el arbol estatico.");
+                mostrarMensaje();
+                return;
+            }
+            try {
             function r(a) { gsap.killTweensOf(a, { opacity: !0 }); gsap.fromTo(a, { opacity: 1 }, { duration: .07, opacity: Math.random(), repeat: -1 }); } function t(a) {
                 e && (a = l[d], gsap.set(a, { x: gsap.getProperty(".pContainer", "x"), y: gsap.getProperty(".pContainer", "y"), scale: m() }), gsap.timeline().to(a, {
                     duration: gsap.utils.random(.61, 6), physics2D: { velocity: gsap.utils.random(-23, 23), angle: gsap.utils.random(-180, 180), gravity: gsap.utils.random(-6, 50) }, scale: 0, rotation: gsap.utils.random(-123, 360), ease: "power1", onStart: r, onStartParams: [a],
@@ -174,9 +177,14 @@
                 })(); (function () { k = gsap.timeline({ onUpdate: t }); k.to(".pContainer, .sparkle", { duration: 6, motionPath: { path: ".treePath", autoRotate: !1 }, ease: "linear" }).to(".pContainer, .sparkle", { duration: 1, onStart: function () { e = !1; }, x: q[0].x, y: q[0].y }).to(".pContainer, .sparkle", { duration: 2, onStart: function () { e = !0; }, motionPath: { path: ".treeBottomPath", autoRotate: !1 }, ease: "linear" }, "-=0").from(".treeBottomMask", { duration: 2, drawSVG: "0% 0%", stroke: "#FFF", ease: "linear" }, "-=2"); })(); c.from([".treePathMask",
                     ".treePotMask"], { drawSVG: "0% 0%", stroke: "#FFF", stagger: { each: 6 }, duration: gsap.utils.wrap([6, 1, 2]), ease: "linear" }).from(".treeStar", { duration: 3, scaleY: 0, scaleX: .15, transformOrigin: "50% 50%", ease: "elastic(1,0.5)" }, "-=4").to(".sparkle", { duration: 3, opacity: 0, ease: "rough({strength: 2, points: 100, template: linear, taper: both, randomize: true, clamp: false})" }, "-=0").to(".treeStarOutline", { duration: 1, opacity: 1, ease: "rough({strength: 2, points: 16, template: linear, taper: none, randomize: true, clamp: false})" },
                         "+=1"); c.add(k, 0); gsap.globalTimeline.timeScale(1.5); k.vars.onComplete = function () { gsap.to('foreignObject', { opacity: 1 }); };
+            } catch (err) {
+                console.warn("[merry] fallo la animacion:", err);
+                mostrarMensaje();
+            }
         })();
     </script>
 
+  <script src="js/nav.js" defer></script>
 </body>
 
 </html>

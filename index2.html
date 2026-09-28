@@ -22,9 +22,13 @@
       background-color: #990000;
     }
   </style>
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/efectos.css">
+    <link rel="stylesheet" href="css/nav.css">
+  </head>
 <body>
-  <div class="card">
+  <div class="card reveal">
     <h1>Ya no hay más que decir...</h1>
     <p>Lo di todo y con eso me quedo , espero cambies porque cada vez que te recuerdo sin extrañarte , solo recuerdo dolor ...<br> y muchas lagrimas , no debi hacer tanto por quien mas me hizo sufrir. Espero no hagas sufrir ala siguiente persona asi ... quierete valorate y date valor <br> porque a pesar de tantos meses ... sigues sin dartelo. ni se lo das a quienes te lo dan ... Adios</p>
     <h4>Por fin ... te solte :D a seguir mejorando nomas ... ya llegara alguien que si lo merezca y me valore ... suerte con todo obedece a tu mama deja de tomar y cuidate porfavor. De nada por todo, se feliz , ya no quiero seguir esperandote , nunca me escogiste no tengo porque escogerte .</h4>
@@ -36,9 +40,27 @@
     <a href="index2.html" class="back-button">Promesas son Promesas</a>
   </div>
 
-  <audio id="bgMusic" autoplay>
+  <!-- El autoplay lo bloquea el navegador; la musica se inicia con el primer
+       toque mediante el botoncito flotante. -->
+  <button id="musicBtn" type="button" aria-label="Reproducir o pausar la musica">▶</button>
+  <audio id="bgMusic" loop>
     <source src="audio/04 - Puente.mp3" type="audio/mpeg">
     Tu navegador no soporta audio HTML5.
   </audio>
+  <script>
+    var bgMusic = document.getElementById("bgMusic");
+    var musicBtn = document.getElementById("musicBtn");
+    musicBtn.addEventListener("click", function () {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(function () {});
+        musicBtn.textContent = "⏸";
+      } else {
+        bgMusic.pause();
+        musicBtn.textContent = "▶";
+      }
+    });
+  </script>
+  <script src="js/efectos.js" defer></script>
+  <script src="js/nav.js" defer></script>
 </body>
 </html>

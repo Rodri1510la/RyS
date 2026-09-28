@@ -4,44 +4,10 @@
 }
 
 
-/* NAV */
-nav {
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 15px 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
 
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin: 0;
-}
 
-nav ul li {
-  margin: 5px 10px;
-}
 
-nav ul li a {
-  color: #ff4d4d; /* rojo fuerte */
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: 1px solid #ff4d4d;
-  border-radius: 8px;
-  transition: 0.3s;
-}
 
-nav ul li a:hover {
-  background-color: #ff9999; /* rojo clarito */
-  color: white;
-  border-color: #ff9999;
-}
 .boton-chat {
   display: inline-block;
   background-color: #ff4d4d;
@@ -69,15 +35,29 @@ body {
   background-color: black;
 }
 
+/* El wrap ancla la tarjeta de atras (postcard1) para que no use left:24%
+   fijo ni 800px que desbordaban el movil. */
+.wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 6px;
+}
+
 .postcard {
-  width: 800px;
-  height: 500px;
+  width: 100%;
+  max-width: 800px;
+  min-height: 500px;
+  height: auto;
   background: rgba(255, 255, 255, 0.101);
 
   margin: 0 auto;
   border-radius: 2%;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
   padding: 3em;
   box-shadow: 0.8em 0.8em 15px rgba(0, 0, 0, 0.3);
   -ms-transform: rotate(2.5deg); /* IE 9 */
@@ -87,22 +67,27 @@ body {
   -webkit-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
+  z-index: 1;
+  align-self: flex-start;
 }
 
 .postcard1 {
-  width: 800px;
-  height: 500px;
-  background: #f594b862;
   position: absolute;
-  left: 24%;
-  -webkit-filter: blur(2px);
-  z-index: -1;
+  left: -6px;
+  top: -6px;
+  right: -6px;
+  bottom: -6px;
+  /* Antes era un relleno rosado translucido que cubria toda la zona; ahora es
+     solo un borde que contornea el mensaje. */
+  background: transparent;
+  border: 3px solid rgba(245, 148, 184, 0.75);
+  z-index: 0;
   margin: 0 auto;
   border-radius: 2%;
   display: flex;
   justify-content: space-between;
   padding: 3em;
-  box-shadow: 0.8em 0.8em 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 18px rgba(245, 148, 184, 0.55);
   -ms-transform: rotate(2.5deg); /* IE 9 */
   -webkit-transform: rotate(2.5deg); /* Chrome, Safari, Opera */
   transform: rotate(2.5deg);
@@ -110,11 +95,12 @@ body {
   -webkit-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
+  pointer-events: none;
 }
 
 h1 {
   text-align: center;
-  font-size: 4.5em;
+  font-size: clamp(2.2rem, 8vw, 4.5em);
   color: #fdfdfd;
   margin-bottom: 5px;
 }
@@ -161,9 +147,10 @@ p span {
   color: #800020;
 }
 p {
-  font-size: 22px;
+  font-size: clamp(1rem, 2.6vw, 22px);
   font-family: cursive;
   font-weight: 540;
+  word-break: break-word;
 }
 .ullu {
   font-size: 25px;
@@ -355,4 +342,14 @@ p {
 .reset button:hover {
   background-color: #fc9d9d;
   color: #a10000;
+}
+
+/* Aviso entre el boton de mensajes y el sobre */
+.aviso-carta {
+  margin: 10px 16px 0;
+  text-align: center;
+  color: #ffc2d1;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  text-shadow: 0 0 14px rgba(255, 77, 109, 0.7);
 }

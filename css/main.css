@@ -44,11 +44,67 @@ body {
   font-family: "Arial Narrow", Arial, sans-serif;
   color: yellow;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 92%;
   font-weight: bold;
   letter-spacing: 10px;
   opacity: 0;
   animation: fadeIn 3s ease-in-out forwards;
   text-align: center;
+}
+
+/* El div "FELIZ 4TO MESARIO" no tenia ni un solo estilo: heredaba #333 sobre
+   el fondo negro y era invisible. Asi se convierte en el titulo de bienvenida. */
+.header-text {
+  position: absolute;
+  top: calc(var(--nav-h, 4rem) + 20px);
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  text-align: center;
+  font-family: "Oswald", sans-serif;
+  font-size: clamp(1.6rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #fff;
+  text-shadow: 0 0 16px rgba(255, 77, 109, 0.9), 0 2px 6px rgba(0, 0, 0, 0.6);
+  -webkit-animation: brillo-header 3s ease-in-out infinite alternate;
+  animation: brillo-header 3s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes brillo-header {
+  from { color: #fff; }
+  to { color: #ffb3c6; }
+}
+@keyframes brillo-header {
+  from { color: #fff; }
+  to { color: #ffb3c6; }
+}
+
+/* Boton de musica: el <audio autoplay> no suena porque los navegadores lo
+   bloquean sin interaccion previa. Este boton dispara la reproduccion con el
+   primer toque y permite pausarla cuando quieran. */
+#musicBtn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 9999;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 77, 109, 0.85);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+@media only screen and (max-width: 600px) {
+  .header-text {
+    letter-spacing: 0.06em;
+  }
 }
 @keyframes fadeIn {
   from {
@@ -1656,33 +1712,6 @@ h1 {
   }
 }
 
-nav {
-  background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente negro */
-  padding: 10px 0; /* Espaciado interno */
-  position: fixed; /* Fijar la barra de navegación en la parte superior de la página */
-  width: 100%; /* Ancho completo */
-  top: 0; /* Pegado a la parte superior */
-  z-index: 1000; /* Asegura que la barra de navegación esté en la parte superior de otros elementos */
-}
 
-nav ul {
-  list-style-type: none; /* Elimina los marcadores de lista */
-  margin: 0; /* Elimina el margen predeterminado */
-  padding: 0; /* Elimina el relleno predeterminado */
-  display: flex; /* Utiliza flexbox para alinear los elementos */
-  
-}
 
-nav ul li {
-  display: inline-block; /* Muestra los elementos de la lista en línea */
-  margin-right: 20px; /* Espaciado entre elementos */
-}
 
-nav ul li a {
-  color: rgb(255, 0, 0); /* Color del texto */
-  text-decoration: none; /* Elimina el subrayado del enlace */
-  font-weight: bold; /* Texto en negrita */
-  padding: 10px 20px; /* Espaciado interno de los elementos */
-  border: 1px solid white; /* Borde blanco */
-  border-radius: 5px; /* Borde redondeado */
-}
