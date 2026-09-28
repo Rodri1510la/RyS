@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat Bonito 💬</title>
+  <title>Chat R y S</title>
+  <link rel="icon" href="img/flowers.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
 
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAJ9GKC0aZTJrFJUZYqAWfZFkH6gAMw0NA",
@@ -24,74 +27,142 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-   function formatearHora(timestamp) {
-  if (!timestamp) {
-    return "";
-  }
-  const fecha = new Date(timestamp);
-  const dia = fecha.getDate().toString().padStart(2, '0');
-  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-  const año = fecha.getFullYear();
-  const horas = fecha.getHours().toString().padStart(2, '0');
-  const minutos = fecha.getMinutes().toString().padStart(2, '0');
-return `${dia}/${mes}/${año} ${horas}:${minutos}`;
-}
+    const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+                   "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+    function formatearHora(timestamp) {
+      if (!timestamp) {
+        return "";
+      }
+      const fecha = new Date(timestamp);
+      const horas = fecha.getHours().toString().padStart(2, "0");
+      const minutos = fecha.getMinutes().toString().padStart(2, "0");
+      return `${horas}:${minutos}`;
+    }
+
+    // Clave "aaaa-m-d" para saber cuando cambia el dia entre dos mensajes.
+    function claveDia(timestamp) {
+      const f = new Date(timestamp);
+      return `${f.getFullYear()}-${f.getMonth()}-${f.getDate()}`;
+    }
+
+    function etiquetaDia(timestamp) {
+      const f = new Date(timestamp);
+      const hoy = new Date();
+      const ayer = new Date();
+      ayer.setDate(hoy.getDate() - 1);
+      if (claveDia(timestamp) === claveDia(hoy.getTime())) {
+        return "Hoy";
+      }
+      if (claveDia(timestamp) === claveDia(ayer.getTime())) {
+        return "Ayer";
+      }
+      const año = f.getFullYear() === hoy.getFullYear() ? "" : ` de ${f.getFullYear()}`;
+      return `${f.getDate()} de ${MESES[f.getMonth()]}${año}`;
+    }
 
     window.addEventListener("DOMContentLoaded", () => {
       const nombreInput = document.getElementById("nombre");
-
-      // Cargar el nombre guardado si existe
-      const nombreGuardado = localStorage.getItem("nombreChat");
-      if (nombreGuardado) {
-        nombreInput.value = nombreGuardado;
-      }
-
-      // Guardar el nombre cuando se cambia
-      nombreInput.addEventListener("change", () => {
-        localStorage.setItem("nombreChat", nombreInput.value);
-      });
-
       const mensajeInput = document.getElementById("mensaje");
       const chatBox = document.getElementById("chat-box");
       const enviarBtn = document.getElementById("enviar");
+      const vacio = document.getElementById("vacio");
 
-      enviarBtn.addEventListener("click", () => {
+      // Cargar el nombre guardado si existe
+      try {
+        const nombreGuardado = localStorage.getItem("nombreChat");
+        if (nombreGuardado) {
+          nombreInput.value = nombreGuardado;
+        }
+      } catch (e) { /* sin almacenamiento: se usa el valor por defecto */ }
+
+      // Guardar el nombre cuando se cambia
+      nombreInput.addEventListener("change", () => {
+        try { localStorage.setItem("nombreChat", nombreInput.value); } catch (e) { /* ignorar */ }
+      });
+
+      // El campo crece con el texto (hasta 5 lineas aprox.).
+      function autoAjustar() {
+        mensajeInput.style.height = "auto";
+        mensajeInput.style.height = Math.min(mensajeInput.scrollHeight, 130) + "px";
+      }
+      mensajeInput.addEventListener("input", autoAjustar);
+
+      let enviando = false;
+      async function enviar() {
         const nombre = nombreInput.value.trim();
         const mensaje = mensajeInput.value.trim();
-        if (nombre && mensaje) {
-          push(ref(db, "mensajes"), {
-            nombre,
-            mensaje,
-            timestamp: Date.now()
-          });
+        if (!nombre || !mensaje || enviando) {
+          return;
+        }
+        enviando = true;
+        enviarBtn.disabled = true;
+        try {
+          await push(ref(db, "mensajes"), { nombre, mensaje, timestamp: Date.now() });
           mensajeInput.value = "";
+          autoAjustar();
+        } catch (e) {
+          console.warn("[chat] no se pudo enviar", e);
+          mensajeInput.classList.add("error");
+          setTimeout(() => mensajeInput.classList.remove("error"), 1500);
+        } finally {
+          enviando = false;
+          enviarBtn.disabled = false;
+          mensajeInput.focus();
+        }
+      }
+
+      enviarBtn.addEventListener("click", enviar);
+
+      // Enter envia; Shift+Enter hace un salto de linea.
+      mensajeInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          enviar();
         }
       });
 
+      // Si todavia no hay mensajes se ve un estado vacio bonito en lugar de una caja en blanco.
+      get(query(ref(db, "mensajes"), limitToLast(1)))
+        .then((snap) => { if (!snap.exists()) { vacio.hidden = false; } })
+        .catch(() => { vacio.hidden = false; });
+
+      let ultimoDia = null;
+
       onChildAdded(ref(db, "mensajes"), (data) => {
         const msg = data.val();
-        const clase = msg.nombre === "Silvana" ? "silvana" : "rodrigo";
-        const hora = formatearHora(msg.timestamp);
+        vacio.hidden = true;
 
-        // Antes se usaba innerHTML con datos que cualquier persona puede
-        // escribir en Firebase: un mensaje con <img onerror=...> o <script>
-        // se ejecutaba en la pagina de todos. textContent lo neutraliza.
+        // Separador de dia cuando cambia la fecha.
+        if (msg.timestamp && claveDia(msg.timestamp) !== ultimoDia) {
+          ultimoDia = claveDia(msg.timestamp);
+          const sep = document.createElement("div");
+          sep.className = "dia";
+          const span = document.createElement("span");
+          span.textContent = etiquetaDia(msg.timestamp);
+          sep.appendChild(span);
+          chatBox.appendChild(sep);
+        }
+
+        const clase = msg.nombre === "Silvana" ? "silvana" : "rodrigo";
+
+        // textContent (no innerHTML): cualquiera puede escribir en Firebase y un
+        // mensaje con etiquetas no debe ejecutarse en la pagina de todos.
         const div = document.createElement("div");
         div.className = `message ${clase} fade-in`;
 
         const strong = document.createElement("strong");
-        strong.textContent = (msg.nombre || "") + ":";
+        strong.textContent = msg.nombre || "";
 
-        const salto = document.createElement("br");
         const texto = document.createElement("span");
+        texto.className = "texto";
         texto.textContent = msg.mensaje || "";
 
         const horaDiv = document.createElement("div");
         horaDiv.className = "hora";
-        horaDiv.textContent = hora;
+        horaDiv.textContent = formatearHora(msg.timestamp);
 
         div.appendChild(strong);
-        div.appendChild(salto);
         div.appendChild(texto);
         div.appendChild(horaDiv);
 
@@ -102,141 +173,264 @@ return `${dia}/${mes}/${año} ${horas}:${minutos}`;
   </script>
 
   <style>
-   body {
-  font-family: 'Segoe UI', sans-serif;
-  background: url("img/fondo.jpg") no-repeat center center fixed;
-  background-size: cover;
-  /* El navbar lo inyecta js/nav.js; css/nav.css pinta el padding-top.
-     Este start fue eliminado: el nav dorado ya no existe en el HTML y
-     dejaba el usuario con dos barras de navegacion. */
-  padding: 10px;
-  margin: 0;
-}
+    * { box-sizing: border-box; }
 
-    h2 {
-      text-align: center;
-      color: #002B7F;
-      margin-bottom: 15px;
-    }
+    html, body { height: 100%; }
 
-    #chat-box {
-      background: white;
-      border: 1px solid #ccc;
-      height: 70vh;
-      overflow-y: auto;
-      padding: 20px;
-      margin: 0 auto 20px;
-      max-width: 95%;
-      width: 100%;
-      border-radius: 15px;
+    body {
+      margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      height: 100vh;
+      height: 100dvh;                 /* en movil no queda tapado por la barra del navegador */
+      font-family: 'Oswald', 'Segoe UI', sans-serif;
+      color: #fff;
+      background:
+        linear-gradient(rgba(20, 5, 15, 0.82), rgba(35, 8, 30, 0.9)),
+        url("img/fondo.jpg") no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
     }
 
-    .chat-controls {
+    /* ---------- Cabecera ---------- */
+    .cabecera {
+      flex: none;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 16px 8px;
+      background: rgba(30, 8, 25, 0.75);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 158, 187, 0.25);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      z-index: 2;
+    }
+
+    .cabecera h1 {
+      margin: 0;
+      font-family: 'Great Vibes', cursive;
+      font-weight: 400;
+      font-size: 2.2rem;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #ff9ebb, #ff4d6d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .quienes {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: #ffc2d1;
+    }
+
+    .avatar {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      max-width: 95%;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0 20px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      font-size: 0.95rem;
     }
 
-    select, input[type="text"] {
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    input[type="text"] {
+    /* ---------- Mensajes ---------- */
+    #chat-box {
       flex: 1;
-      min-width: 300px;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 16px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      scroll-behavior: smooth;
     }
 
-    button {
-      padding: 12px 25px;
-      background-color: #002B7F;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 16px;
+    #chat-box::-webkit-scrollbar { width: 6px; }
+    #chat-box::-webkit-scrollbar-thumb { background: rgba(255, 77, 109, 0.6); border-radius: 6px; }
+
+    .dia {
+      align-self: center;
+      margin: 12px 0 6px;
     }
 
-    button:hover {
-      background-color: #0044aa;
+    .dia span {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffc2d1;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .message {
-      max-width: 75%;
-      padding: 12px 18px;
-      border-radius: 20px;
-      line-height: 1.5;
-      display: inline-block;
-      font-size: 16px;
-      word-wrap: break-word;
-      animation: fadeIn 0.4s ease;
       position: relative;
-      margin: 5px 0;
+      max-width: min(78%, 520px);
+      padding: 8px 14px 6px;
+      border-radius: 18px;
+      line-height: 1.45;
+      font-size: 1.02rem;
+      font-weight: 300;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
+
+    .message strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 1px;
+    }
+
+    .message .texto { display: block; }
 
     .silvana {
-      background-color: #ffe6f0;
-      color: #99004d;
       align-self: flex-start;
-      border-bottom-left-radius: 0;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 158, 187, 0.25);
+      border-bottom-left-radius: 4px;
     }
+    .silvana strong { color: #ffb3c6; }
 
     .rodrigo {
-      background-color: #e6f0ff;
-      color: #003380;
       align-self: flex-end;
-      border-bottom-right-radius: 0;
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      border-bottom-right-radius: 4px;
     }
+    .rodrigo strong { color: #ffe0e8; text-align: right; }
 
     .hora {
-      font-size: 11px;
-      color: #666;
+      margin-top: 2px;
+      font-size: 0.68rem;
       text-align: right;
-      margin-top: 4px;
+      opacity: 0.7;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes entrar {
+      from { opacity: 0; transform: translateY(14px) scale(0.96); }
+      to   { opacity: 1; transform: none; }
+    }
+    .fade-in { animation: entrar 0.35s ease; }
+
+    /* ---------- Estado vacio ---------- */
+    #vacio {
+      margin: auto;
+      text-align: center;
+      padding: 20px;
+    }
+    #vacio[hidden] { display: none; }
+    #vacio .corazon { font-size: 3.4rem; display: block; animation: latido 1.4s ease-in-out infinite; }
+    #vacio p {
+      margin: 6px 0 0;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: #ffc2d1;
+    }
+    @keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
+    /* ---------- Barra para escribir (pegada abajo) ---------- */
+    .chat-controls {
+      flex: none;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(30, 8, 25, 0.85);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255, 158, 187, 0.25);
     }
 
-    .fade-in {
-      animation: fadeIn 0.4s ease;
+    select, textarea {
+      font-family: inherit;
+      font-size: 16px;               /* 16px evita el zoom automatico de iOS */
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 158, 187, 0.3);
+      border-radius: 20px;
+      padding: 10px 14px;
+      outline: none;
+    }
+
+    select { flex: none; max-width: 120px; padding-right: 8px; }
+    select option { color: #000; }
+
+    textarea {
+      flex: 1;
+      min-width: 0;
+      resize: none;
+      height: 44px;
+      max-height: 130px;
+      line-height: 1.35;
+    }
+    textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
+    textarea:focus, select:focus { border-color: #ff4d6d; box-shadow: 0 0 0 2px rgba(255, 77, 109, 0.3); }
+    textarea.error { border-color: #ff2a2a; animation: temblor 0.3s; }
+    @keyframes temblor { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+    button#enviar {
+      flex: none;
+      width: 46px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b9d, #c9184a);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(255, 77, 109, 0.6);
+      transition: transform 0.15s;
+    }
+    button#enviar:hover:not(:disabled) { transform: scale(1.1); }
+    button#enviar:disabled { opacity: 0.5; cursor: default; }
+
+    /* El boton flotante "Menu" ocupa la esquina izquierda: la cabecera se desplaza. */
+    @media (max-width: 520px) {
+      .cabecera { padding-left: 100px; padding-right: 12px; align-items: flex-start; }
+      .cabecera h1 { font-size: 1.9rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in, #vacio .corazon { animation: none; }
+      #chat-box { scroll-behavior: auto; }
     }
   </style>
-    <link rel="stylesheet" href="css/nav.css">
-  </head>
+  <link rel="stylesheet" href="css/nav.css">
+</head>
 <body>
 
+  <header class="cabecera">
+    <h1>Chat R y S</h1>
+    <div class="quienes">
+      <span class="avatar" aria-hidden="true">🦉</span> Silvana
+      <span aria-hidden="true">·</span>
+      <span class="avatar" aria-hidden="true">🐥</span> Rodrigo
+    </div>
+  </header>
 
-  <h2>Chat R y S</h2>
-
-  <div id="chat-box"></div>
+  <main id="chat-box" aria-live="polite">
+    <div id="vacio" hidden>
+      <span class="corazon" aria-hidden="true">💌</span>
+      <p>Escríbeme algo bonito</p>
+    </div>
+  </main>
 
   <div class="chat-controls">
-    <select id="nombre">
+    <select id="nombre" aria-label="¿Quién escribe?">
       <option value="Silvana">🦉 Silvana</option>
       <option value="Rodrigo">🐥 Rodrigo</option>
     </select>
-    <input type="text" id="mensaje" placeholder="Escribe un mensaje">
-    <button id="enviar">Enviar</button>
+    <textarea id="mensaje" rows="1" maxlength="1000" placeholder="Escribe un mensaje" aria-label="Mensaje"></textarea>
+    <button id="enviar" type="button" aria-label="Enviar">➤</button>
   </div>
 
   <script src="js/nav.js" defer></script>
