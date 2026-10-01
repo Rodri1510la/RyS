@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Silvana ✨ Universo de Flores Amarillas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: radial-gradient(ellipse at bottom, #1f1600 0%, #0d0a00 50%, #030200 100%);
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Tipografías */
+        .font-serif-custom {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+        .font-handwriting {
+            font-family: 'Alex Brush', cursive;
+        }
+
+        /* Canvas de fondo */
+        #universeCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: auto;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Tarjeta de Cristal Dorado */
+        .glass-panel {
+            background: rgba(22, 17, 4, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 215, 0, 0.32);
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6),
+                        0 0 25px 0 rgba(255, 200, 0, 0.14),
+                        inset 0 0 20px rgba(255, 220, 100, 0.08);
+        }
+
+        .glass-panel-subtle {
+            background: rgba(30, 24, 6, 0.50);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.22);
+        }
+
+        /* Botón Dorado Principal */
+        .btn-gold {
+            background: linear-gradient(135deg, #ffe066 0%, #ffd700 50%, #ff9e00 100%);
+            color: #1a1200;
+            font-weight: 600;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5),
+                        0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 30px rgba(255, 220, 0, 0.85),
+                        0 6px 20px rgba(255, 160, 0, 0.4);
+            background: linear-gradient(135deg, #fff275 0%, #ffe600 50%, #ffab00 100%);
+        }
+
+        .btn-gold:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Resplandores dorados */
+        .text-glow-gold {
+            text-shadow: 0 0 14px rgba(255, 215, 0, 0.85),
+                         0 0 28px rgba(255, 180, 0, 0.55);
+        }
+        .text-glow-soft {
+            text-shadow: 0 0 8px rgba(255, 235, 150, 0.6);
+        }
+
+        /* Modal & Transiciones */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Pulso romántico */
+        @keyframes gentleHeartbeat {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 14px #ffd700); }
+        }
+        .animate-heartbeat {
+            animation: gentleHeartbeat 3.2s infinite ease-in-out;
+        }
+
+        /* Scroll estilizado */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.4);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center relative overflow-x-hidden">
+
+    <!-- Canvas para el universo cósmico, flores, pétalos, mariposas doradas, jardín botánico y constelación de SILVANA -->
+    <canvas id="universeCanvas"></canvas>
+
+    <!-- Capa de Interfaz y Contenido -->
+    <div class="content-layer w-full min-h-screen flex flex-col justify-between items-center p-3 sm:p-6 md:p-8">
+        
+        <!-- Encabezado -->
+        <header class="w-full max-w-5xl flex justify-between items-center pt-2 px-2 sm:px-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl sm:text-3xl text-yellow-300 font-handwriting text-glow-gold tracking-wide">
+                    Para Silvana ✨
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Botón Crear Ramo -->
+                <button id="openBouquetBtn" class="interactive btn-gold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm font-semibold shadow-lg">
+                    <span class="text-base">💐</span>
+                    <span>Armar Ramo</span>
+                </button>
+
+                <!-- Botón de Constelación SILVANA -->
+                <button id="constellationBtn" class="interactive glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-full flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm text-yellow-200 hover:text-yellow-100 hover:border-yellow-300/50 transition">
+                    <span class="text-base">✨</span>
+                    <span class="hidden sm:inline">Constelación</span>
+                    <span class="font-bold text-yellow-400">SILVANA</span>
+                </button>
+
+                <!-- Botón de Música Melódica -->
+                <button id="musicToggleBtn" class="interactive glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-full flex items-center space-x-1.5 sm:space-x-2 text-xs sm:text-sm text-yellow-200 hover:text-yellow-100 hover:border-yellow-300/50 transition">
+                    <svg id="musicIconOff" class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.707 12 4.414 12 5.586v12.828c0 1.172-1.077 1.879-1.707 1.251L5.586 15z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+                    </svg>
+                    <svg id="musicIconOn" class="w-4 h-4 text-yellow-400 hidden animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.707 12 4.414 12 5.586v12.828c0 1.172-1.077 1.879-1.707 1.251L5.586 15z"></path>
+                    </svg>
+                    <span id="musicText" class="hidden sm:inline">Música</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Tarjeta Principal / Espacio Romántico -->
+        <main class="my-auto py-4 w-full max-w-xl">
+            <div class="interactive glass-panel rounded-3xl p-6 sm:p-8 md:p-10 text-center relative overflow-hidden transition-all duration-500">
+                
+                <!-- Girasol / Flor Central Resplandeciente -->
+                <div class="flex justify-center mb-3">
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center animate-heartbeat cursor-pointer" id="centerFlower">
+                        <svg class="w-full h-full text-yellow-400 filter drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]" viewBox="0 0 100 100" fill="currentColor">
+                            <!-- Corona de pétalos -->
+                            <g transform="translate(50,50)">
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(0)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(30)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(60)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(90)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(120)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(150)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(180)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(210)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(240)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(270)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffd700" transform="rotate(300)" />
+                                <ellipse cx="0" cy="-28" rx="8" ry="18" fill="#ffb700" transform="rotate(330)" />
+                                <!-- Centro de Girasol -->
+                                <circle cx="0" cy="0" r="17" fill="#4a2e00" stroke="#ffb700" stroke-width="2"/>
+                                <circle cx="0" cy="0" r="10" fill="#2d1a00"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <span class="inline-block px-4 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-xs tracking-widest uppercase mb-3">
+                    Un detalle especial para ti
+                </span>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif-custom text-yellow-300 font-bold mb-3 text-glow-gold">
+                    Silvana
+                </h1>
+
+                <!-- Frases cambiantes con animación -->
+                <div class="min-h-[75px] flex items-center justify-center mb-6">
+                    <p id="romanticQuote" class="text-yellow-100/95 text-base sm:text-lg font-light leading-relaxed font-serif-custom italic transition-opacity duration-500">
+                        "Si tuviera una flor amarilla por cada vez que iluminas mi mundo, caminaríamos eternamente en un jardín infinito bajo las estrellas."
+                    </p>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 justify-center items-center">
+                    
+                    <!-- Hacer Florecer -->
+                    <button id="bloomBtn" class="interactive btn-gold px-3 py-2.5 sm:py-3 rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-md">
+                        <span>🌼 Florecer</span>
+                    </button>
+
+                    <!-- Armar Ramo -->
+                    <button id="bouquetActionBtn" class="interactive glass-panel-subtle px-3 py-2.5 sm:py-3 rounded-2xl text-xs text-yellow-300 border border-yellow-400/40 hover:bg-yellow-400/20 hover:border-yellow-300 transition flex items-center justify-center space-x-1.5">
+                        <span>💐 Ramo</span>
+                    </button>
+                    
+                    <!-- Mensaje para Silvana -->
+                    <button id="messageBtn" class="interactive glass-panel-subtle px-3 py-2.5 sm:py-3 rounded-2xl text-xs text-yellow-300 border border-yellow-400/40 hover:bg-yellow-400/20 hover:border-yellow-300 transition flex items-center justify-center space-x-1.5">
+                        <span>💌 Carta</span>
+                    </button>
+
+                    <!-- Plantar Flores Mágicas -->
+                    <button id="plantBtn" class="interactive glass-panel-subtle px-3 py-2.5 sm:py-3 rounded-2xl text-xs text-yellow-300 border border-yellow-400/40 hover:bg-yellow-400/20 hover:border-yellow-300 transition flex items-center justify-center space-x-1.5">
+                        <span>✨ Plantar</span>
+                    </button>
+                </div>
+                
+                <p class="inline-block px-4 py-1.5 mt-5 rounded-full bg-yellow-400/10 border border-yellow-400/40 text-yellow-300 text-xs sm:text-sm font-semibold italic text-glow-gold">
+                    🌻 Espera para la sorpresa de mañana 🌻
+                </p>
+
+                <p class="text-xs text-yellow-400/70 mt-4 italic">
+                    💛 Toca o haz clic en cualquier lugar para cultivar flores y atraer mariposas doradas.
+                </p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full text-center pb-2 text-xs text-yellow-500/80 font-light flex items-center justify-center gap-1">
+            <span>Hecho con amor y flores amarillas infinitas para</span>
+            <span class="text-yellow-300 font-semibold">Silvana</span>
+            <span>✨</span>
+        </footer>
+    </div>
+
+    <!-- ==========================================
+         MODAL 1: CARTA ESPECIAL PARA SILVANA
+         ========================================== -->
+    <div id="letterModal" class="interactive fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-lg w-full rounded-3xl p-6 sm:p-8 text-center relative border border-yellow-400/40 shadow-2xl fade-in">
+            <!-- Botón Cerrar -->
+            <button id="closeLetterBtn" class="absolute top-4 right-4 text-yellow-300/70 hover:text-yellow-200 hover:rotate-90 transition p-2 text-xl font-bold">
+                ✕
+            </button>
+
+            <div class="text-3xl mb-2">🌻</div>
+            <h2 class="text-2xl sm:text-3xl font-serif-custom text-yellow-300 font-bold mb-1 text-glow-gold">
+                Querida Silvana
+            </h2>
+            <div class="w-16 h-0.5 bg-yellow-400/40 mx-auto my-3"></div>
+
+            <div class="custom-scroll max-h-[50vh] overflow-y-auto px-2 text-left space-y-4 text-yellow-100/90 text-sm sm:text-base leading-relaxed font-serif-custom italic">
+                <p>
+                    Dicen que las flores amarillas representan la luz, la alegría compartida y la promesa de permanecer juntos en cada momento brillante.
+                </p>
+                <p>
+                    Quería darte este universo porque una sola flor no era suficiente para recordarte lo especial que eres. Cada estrella que titila, cada mariposa que vuela y cada pétalo dorado que brota en esta pantalla lleva un pedacito de admiración y cariño hacia ti.
+                </p>
+                <p>
+                    Gracias por ser esa luz cálida, por iluminar mis días con tu sonrisa y por hacer que todo a tu alrededor sea más bonito.
+                </p>
+                <p class="text-right font-cursive text-xl text-yellow-300 pt-2">
+                    Con todo mi cariño, siempre ✨
+                </p>
+            </div>
+
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                <button id="nextLetterQuoteBtn" class="btn-gold px-5 py-2.5 rounded-xl text-xs sm:text-sm">
+                    ✨ Leer otra dedicatoria
+                </button>
+                <button id="closeLetterBtn2" class="glass-panel-subtle px-5 py-2.5 rounded-xl text-xs sm:text-sm text-yellow-200 border border-yellow-400/30 hover:bg-yellow-400/10">
+                    Cerrar Carta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL 2: TALLER DE RAMO VIRTUAL DESCARGABLE
+         ========================================== -->
+    <div id="bouquetModal" class="interactive fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 hidden">
+        <div class="glass-panel max-w-3xl w-full rounded-3xl p-5 sm:p-7 relative border border-yellow-400/40 shadow-2xl fade-in max-h-[95vh] overflow-y-auto custom-scroll">
+            
+            <!-- Botón Cerrar -->
+            <button id="closeBouquetBtn" class="absolute top-4 right-4 text-yellow-300/70 hover:text-yellow-200 hover:rotate-90 transition p-2 text-xl font-bold z-10">
+                ✕
+            </button>
+
+            <div class="text-center mb-4">
+                <span class="text-xs uppercase tracking-widest text-yellow-400 font-semibold">Taller Floral Virtual</span>
+                <h2 class="text-2xl sm:text-3xl font-serif-custom text-yellow-300 font-bold text-glow-gold">
+                    Crea tu Ramo de Flores Amarillas
+                </h2>
+                <p class="text-xs text-yellow-100/80 mt-1 italic">
+                    Para Silvana: Elige las flores, el lazo y tu mensaje para descargar tu tarjeta floral.
+                </p>
+            </div>
+
+            <!-- Contenido: Previsualización + Controles -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+                
+                <!-- Vista Previa del Canvas del Ramo -->
+                <div class="flex flex-col items-center justify-center">
+                    <div class="relative rounded-2xl overflow-hidden border-2 border-yellow-400/50 shadow-[0_0_25px_rgba(255,215,0,0.2)] bg-[#0c0a02]">
+                        <canvas id="bouquetCanvas" width="380" height="460" class="w-full max-w-[320px] sm:max-w-[340px] h-auto block"></canvas>
+                    </div>
+                    <span class="text-[11px] text-yellow-400/60 mt-2">Vista previa en alta resolución HD</span>
+                </div>
+
+                <!-- Panel de Personalización -->
+                <div class="space-y-4">
+                    
+                    <!-- Selector de Flores -->
+                    <div>
+                        <label class="block text-xs font-semibold text-yellow-300 mb-2">1. Añade flores a tu ramo:</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="add-flower-btn glass-panel-subtle p-2 rounded-xl text-center hover:border-yellow-300 transition flex flex-col items-center" data-type="sunflower">
+                                <span class="text-xl">🌻</span>
+                                <span class="text-[11px] text-yellow-200 mt-1 font-medium">+ Girasol</span>
+                            </button>
+                            <button class="add-flower-btn glass-panel-subtle p-2 rounded-xl text-center hover:border-yellow-300 transition flex flex-col items-center" data-type="daisy">
+                                <span class="text-xl">🌼</span>
+                                <span class="text-[11px] text-yellow-200 mt-1 font-medium">+ Margarita</span>
+                            </button>
+                            <button class="add-flower-btn glass-panel-subtle p-2 rounded-xl text-center hover:border-yellow-300 transition flex flex-col items-center" data-type="rose">
+                                <span class="text-xl">🏵️</span>
+                                <span class="text-[11px] text-yellow-200 mt-1 font-medium">+ Rosa Dorada</span>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 px-1 text-xs text-yellow-300/80">
+                            <span id="flowerCountText">Flores: 6</span>
+                            <button id="clearBouquetBtn" class="text-xs text-red-400 hover:text-red-300 underline">Reiniciar Ramo</button>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Lazo / Envoltura -->
+                    <div>
+                        <label class="block text-xs font-semibold text-yellow-300 mb-2">2. Color del lazo de seda:</label>
+                        <div class="flex flex-wrap gap-2.5">
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-400 shadow-md bg-gradient-to-tr from-amber-600 to-yellow-300 transition transform hover:scale-110 active:scale-95" data-ribbon="#ffd700" title="Dorado Radiante"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-rose-500 to-pink-300 transition transform hover:scale-110 active:scale-95" data-ribbon="#ff4081" title="Rosa Amor"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-red-700 to-red-400 transition transform hover:scale-110 active:scale-95" data-ribbon="#d32f2f" title="Rojo Pasión"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-emerald-600 to-teal-300 transition transform hover:scale-110 active:scale-95" data-ribbon="#2e7d32" title="Verde Esmeralda"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-indigo-500 to-purple-300 transition transform hover:scale-110 active:scale-95" data-ribbon="#7c4dff" title="Lavanda Dulce"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-sky-500 to-cyan-300 transition transform hover:scale-110 active:scale-95" data-ribbon="#0288d1" title="Azul Cielo"></button>
+                            <button class="ribbon-btn w-8 h-8 rounded-full border-2 border-white/40 shadow-md bg-gradient-to-tr from-stone-100 to-amber-100 transition transform hover:scale-110 active:scale-95" data-ribbon="#ffffff" title="Blanco Puro"></button>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje / Dedicatoria personalizada -->
+                    <div>
+                        <label class="block text-xs font-semibold text-yellow-300 mb-1.5">3. Dedicatoria en la tarjeta:</label>
+                        <input type="text" id="bouquetNoteInput" value="Con todo mi cariño para Silvana ✨" maxlength="55" class="w-full bg-black/40 border border-yellow-400/40 rounded-xl px-3 py-2 text-xs text-yellow-100 focus:outline-none focus:border-yellow-300 font-serif-custom italic">
+                    </div>
+
+                    <!-- Botón de Descarga HD -->
+                    <div class="pt-2">
+                        <button id="downloadBouquetBtn" class="w-full btn-gold py-3 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center space-x-2 shadow-xl">
+                            <span>📥 Descargar Tarjeta del Ramo (HD)</span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Principal -->
+    <script>
+        // ==========================================
+        // 1. CONFIGURACIÓN DEL CANVAS Y FONDO
+        // ==========================================
+        const canvas = document.getElementById('universeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initStars();
+            buildSilvanaConstellation();
+            initGardenStems();
+        });
+
+        // Luciérnagas / Seguidor de Cursor & Toque
+        const mouse = {
+            x: width / 2,
+            y: height / 2,
+            active: false
+        };
+
+        const fireflies = [];
+        const FIREFLY_COUNT = 25;
+
+        for (let i = 0; i < FIREFLY_COUNT; i++) {
+            fireflies.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 1.2,
+                vy: (Math.random() - 0.5) * 1.2,
+                radius: Math.random() * 2 + 1,
+                alpha: Math.random() * 0.7 + 0.3,
+                pulse: Math.random() * 0.05 + 0.02
+            });
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+            if (Math.random() > 0.6) {
+                petals.push(new PetalParticle(mouse.x, mouse.y, true));
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+                mouse.active = true;
+            }
+        });
+
+        // ==========================================
+        // 2. SISTEMA DE AUDIO (CAJA MUSICAL ROMÁNTICA)
+        // ==========================================
+        let audioCtx = null;
+        let isPlayingMusic = false;
+        let musicStep = 0;
+        let musicTimer = null;
+
+        const melodyNotes = [
+            523.25, 659.25, 783.99, 659.25, // C5, E5, G5, E5
+            587.33, 440.00, 523.25, 392.00, // D5, A4, C5, G4
+            329.63, 392.00, 440.00, 523.25, // E4, G4, A4, C5
+            659.25, 587.33, 523.25, 783.99, // E5, D5, C5, G5
+            880.00, 783.99, 659.25, 587.33  // A5, G5, E5, D5
+        ];
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playChimeSound(freq = null) {
+            try {
+                const ctxAudio = getAudioContext();
+                const osc = ctxAudio.createOscillator();
+                const gain = ctxAudio.createGain();
+
+                const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                const selectedFreq = freq || frequencies[Math.floor(Math.random() * frequencies.length)];
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(selectedFreq, ctxAudio.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(selectedFreq * 1.02, ctxAudio.currentTime + 0.8);
+
+                gain.gain.setValueAtTime(0.08, ctxAudio.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 1.2);
+
+                osc.connect(gain);
+                gain.connect(ctxAudio.destination);
+
+                osc.start();
+                osc.stop(ctxAudio.currentTime + 1.2);
+            } catch (e) {}
+        }
+
+        function playMusicStep() {
+            if (!isPlayingMusic) return;
+            const ctxAudio = getAudioContext();
+            
+            try {
+                const note = melodyNotes[musicStep % melodyNotes.length];
+                musicStep++;
+
+                const osc = ctxAudio.createOscillator();
+                const gain = ctxAudio.createGain();
+                const harmOsc = ctxAudio.createOscillator();
+                const harmGain = ctxAudio.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(note, ctxAudio.currentTime);
+
+                harmOsc.type = 'triangle';
+                harmOsc.frequency.setValueAtTime(note * 2, ctxAudio.currentTime);
+
+                gain.gain.setValueAtTime(0, ctxAudio.currentTime);
+                gain.gain.linearRampToValueAtTime(0.07, ctxAudio.currentTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 2.8);
+
+                harmGain.gain.setValueAtTime(0, ctxAudio.currentTime);
+                harmGain.gain.linearRampToValueAtTime(0.02, ctxAudio.currentTime + 0.03);
+                harmGain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 1.6);
+
+                osc.connect(gain);
+                harmOsc.connect(harmGain);
+                gain.connect(ctxAudio.destination);
+                harmGain.connect(ctxAudio.destination);
+
+                osc.start();
+                harmOsc.start();
+                osc.stop(ctxAudio.currentTime + 3.0);
+                harmOsc.stop(ctxAudio.currentTime + 2.0);
+            } catch (e) {}
+        }
+
+        const musicToggleBtn = document.getElementById('musicToggleBtn');
+        const musicIconOff = document.getElementById('musicIconOff');
+        const musicIconOn = document.getElementById('musicIconOn');
+        const musicText = document.getElementById('musicText');
+
+        musicToggleBtn.addEventListener('click', () => {
+            getAudioContext();
+            isPlayingMusic = !isPlayingMusic;
+
+            if (isPlayingMusic) {
+                musicIconOff.classList.add('hidden');
+                musicIconOn.classList.remove('hidden');
+                musicText.innerText = 'Sonando ♪';
+                playMusicStep();
+                musicTimer = setInterval(playMusicStep, 1100);
+            } else {
+                musicIconOff.classList.remove('hidden');
+                musicIconOn.classList.add('hidden');
+                musicText.innerText = 'Música';
+                clearInterval(musicTimer);
+            }
+        });
+
+        // ==========================================
+        // 3. SISTEMA DE ESTRELLAS Y CONSTELACIÓN "SILVANA"
+        // ==========================================
+        let stars = [];
+        const STAR_COUNT = 180;
+        let constellationActive = false;
+        let constellationAlpha = 0;
+        let silvanaPoints = [];
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2 + 0.5,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.02 + 0.005,
+                    color: Math.random() > 0.35 ? '#ffd700' : '#ffffff'
+                });
+            }
+        }
+        initStars();
+
+        function buildSilvanaConstellation() {
+            silvanaPoints = [];
+            const isMobile = width < 640;
+            const scale = isMobile ? Math.min(width / 360, 0.8) : 1;
+            const letterSpacing = isMobile ? width * 0.125 : 82;
+            const letterWidth = isMobile ? width * 0.08 : 55;
+            const letterHeight = isMobile ? 70 * scale : 100;
+            const startX = (width - (6 * letterSpacing + letterWidth)) / 2;
+            const startY = isMobile ? height * 0.16 : height * 0.20;
+
+            // Letras S-I-L-V-A-N-A en coordenadas normalizadas (0..1)
+            const glyphs = {
+                S: { nodes: [[1,0],[0,0],[0,0.5],[1,0.5],[1,1],[0,1]], lines: [[0,1],[1,2],[2,3],[3,4],[4,5]] },
+                I: { nodes: [[0.5,0],[0.5,0.5],[0.5,1]], lines: [[0,1],[1,2]] },
+                L: { nodes: [[0,0],[0,0.5],[0,1],[1,1]], lines: [[0,1],[1,2],[2,3]] },
+                V: { nodes: [[0,0],[0.25,0.5],[0.5,1],[0.75,0.5],[1,0]], lines: [[0,1],[1,2],[2,3],[3,4]] },
+                A: { nodes: [[0,1],[0.25,0.5],[0.5,0],[0.75,0.5],[1,1]], lines: [[0,1],[1,2],[2,3],[3,4],[1,3]] },
+                N: { nodes: [[0,1],[0,0],[1,1],[1,0]], lines: [[0,1],[1,2],[2,3]] }
+            };
+
+            "SILVANA".split('').forEach((ch, idx) => {
+                const g = glyphs[ch];
+                const x = startX + idx * letterSpacing;
+                const nodes = g.nodes.map(([u, v]) => ({ x: x + u * letterWidth, y: startY + v * letterHeight }));
+                silvanaPoints.push({ nodes: nodes, lines: g.lines });
+            });
+        }
+        buildSilvanaConstellation();
+
+        const constellationBtn = document.getElementById('constellationBtn');
+        constellationBtn.addEventListener('click', () => {
+            constellationActive = !constellationActive;
+            playChimeSound(1046.50);
+            if (constellationActive) {
+                constellationBtn.classList.add('border-yellow-300', 'bg-yellow-400/20');
+                triggerPetalCascade();
+            } else {
+                constellationBtn.classList.remove('border-yellow-300', 'bg-yellow-400/20');
+            }
+        });
+
+        function drawStarsAndConstellation() {
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0.15) {
+                    star.speed = -star.speed;
+                }
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, Math.min(1, star.alpha));
+                ctx.fillStyle = star.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#ffd700';
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            if (constellationActive && constellationAlpha < 1) {
+                constellationAlpha += 0.03;
+            } else if (!constellationActive && constellationAlpha > 0) {
+                constellationAlpha -= 0.03;
+            }
+
+            if (constellationAlpha > 0.01) {
+                ctx.save();
+                ctx.globalAlpha = constellationAlpha;
+                ctx.strokeStyle = 'rgba(255, 220, 100, 0.75)';
+                ctx.lineWidth = 1.8;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ffe066';
+
+                silvanaPoints.forEach(letter => {
+                    letter.lines.forEach(([i, j]) => {
+                        const p1 = letter.nodes[i];
+                        const p2 = letter.nodes[j];
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    });
+
+                    letter.nodes.forEach(node => {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.shadowBlur = 20;
+                        ctx.shadowColor = '#ffd700';
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, 3.5, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.fillStyle = '#ffd700';
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, 1.8, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                });
+
+                ctx.font = "14px Montserrat, sans-serif";
+                ctx.fillStyle = "rgba(255, 235, 150, 0.9)";
+                ctx.textAlign = "center";
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "#ffd700";
+                const textY = (width < 640) ? height * 0.13 : height * 0.17;
+                ctx.fillText("✨ Constelación de Silvana ✨", width / 2, textY);
+
+                ctx.restore();
+            }
+        }
+
+        // ==========================================
+        // 4. JARDÍN BOTÁNICO INFERIOR CRECIENTE (MEJORA 5)
+        // ==========================================
+        let gardenStems = [];
+
+        function initGardenStems() {
+            gardenStems = [];
+            const stemCount = Math.floor(width / 75) + 3;
+            for (let i = 0; i < stemCount; i++) {
+                const baseX = (i * (width / (stemCount - 1))) + (Math.random() - 0.5) * 30;
+                const targetHeight = Math.random() * 120 + 90;
+                gardenStems.push({
+                    baseX: baseX,
+                    baseY: height + 10,
+                    currentHeight: 0,
+                    targetHeight: targetHeight,
+                    growthSpeed: Math.random() * 0.8 + 0.6,
+                    swayOffset: Math.random() * Math.PI * 2,
+                    swaySpeed: Math.random() * 0.02 + 0.015,
+                    flowerType: ['sunflower', 'daisy', 'rose'][Math.floor(Math.random() * 3)],
+                    flowerBloom: 0,
+                    leafCount: 2
+                });
+            }
+        }
+        initGardenStems();
+
+        function drawGardenStems() {
+            const time = Date.now() * 0.001;
+
+            gardenStems.forEach(stem => {
+                if (stem.currentHeight < stem.targetHeight) {
+                    stem.currentHeight += stem.growthSpeed;
+                } else if (stem.flowerBloom < 1) {
+                    stem.flowerBloom += 0.02;
+                }
+
+                const sway = Math.sin(time * stem.swaySpeed + stem.swayOffset) * 14;
+                const tipX = stem.baseX + sway;
+                const tipY = stem.baseY - stem.currentHeight;
+
+                ctx.save();
+                ctx.strokeStyle = '#2d5a27';
+                ctx.lineWidth = 3.5;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(stem.baseX, stem.baseY);
+                ctx.quadraticCurveTo(stem.baseX + sway * 0.4, stem.baseY - stem.currentHeight * 0.5, tipX, tipY);
+                ctx.stroke();
+
+                if (stem.currentHeight > 40) {
+                    const leafY = stem.baseY - stem.currentHeight * 0.45;
+                    const leafX = stem.baseX + sway * 0.4;
+                    ctx.fillStyle = '#3a7d2c';
+                    ctx.beginPath();
+                    ctx.ellipse(leafX - 10, leafY, 4, 12, -0.6, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.ellipse(leafX + 10, leafY - 8, 4, 12, 0.6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                if (stem.flowerBloom > 0.05) {
+                    const flowerSize = (stem.flowerBloom) * 18;
+                    ctx.translate(tipX, tipY);
+                    ctx.rotate(sway * 0.03);
+
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#ffd700';
+
+                    if (stem.flowerType === 'sunflower') {
+                        ctx.fillStyle = '#ffd700';
+                        for (let p = 0; p < 10; p++) {
+                            const ang = (Math.PI * 2 / 10) * p;
+                            ctx.beginPath();
+                            ctx.ellipse(Math.cos(ang) * flowerSize * 0.7, Math.sin(ang) * flowerSize * 0.7, flowerSize * 0.35, flowerSize * 0.7, ang, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.fillStyle = '#382202';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, flowerSize * 0.38, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        ctx.fillStyle = '#ffea00';
+                        for (let p = 0; p < 8; p++) {
+                            const ang = (Math.PI * 2 / 8) * p;
+                            ctx.beginPath();
+                            ctx.arc(Math.cos(ang) * flowerSize * 0.6, Math.sin(ang) * flowerSize * 0.6, flowerSize * 0.4, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.fillStyle = '#ff6f00';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, flowerSize * 0.3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+                ctx.restore();
+            });
+        }
+
+        // ==========================================
+        // 5. MARIPOSAS DORADAS INTERACTIVAS (MEJORA 2)
+        // ==========================================
+        class GoldenButterfly {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height * 0.6 + 50;
+                this.targetX = this.x;
+                this.targetY = this.y;
+                this.size = Math.random() * 4 + 9;
+                this.flapSpeed = Math.random() * 0.15 + 0.18;
+                this.flapPhase = Math.random() * Math.PI * 2;
+                this.angle = 0;
+                this.color = ['#ffee55', '#ffd700', '#ffca28'][Math.floor(Math.random() * 3)];
+                this.trailTimer = 0;
+            }
+
+            update() {
+                this.flapPhase += this.flapSpeed;
+
+                if (mouse.active && Math.random() > 0.08) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 320) {
+                        this.targetX = mouse.x + (Math.random() - 0.5) * 120;
+                        this.targetY = mouse.y + (Math.random() - 0.5) * 120;
+                    }
+                }
+
+                if (Math.random() < 0.02) {
+                    this.targetX = Math.random() * width * 0.9 + width * 0.05;
+                    this.targetY = Math.random() * height * 0.7 + 60;
+                }
+
+                const vx = (this.targetX - this.x) * 0.015;
+                const vy = (this.targetY - this.y) * 0.015 + Math.sin(this.flapPhase * 0.5) * 1.2;
+
+                this.x += vx;
+                this.y += vy;
+                this.angle = Math.atan2(vy, vx) + Math.PI / 2;
+
+                this.trailTimer++;
+                if (this.trailTimer % 4 === 0) {
+                    petals.push(new PetalParticle(this.x, this.y, true));
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+
+                const wingFlap = Math.abs(Math.sin(this.flapPhase));
+
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ffd700';
+
+                // Ala Izquierda
+                ctx.save();
+                ctx.scale(wingFlap, 1);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(-this.size * 0.7, -this.size * 0.5, this.size * 0.85, this.size * 1.2, -0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffa000';
+                ctx.beginPath();
+                ctx.ellipse(-this.size * 0.6, this.size * 0.5, this.size * 0.6, this.size * 0.8, -0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Ala Derecha
+                ctx.save();
+                ctx.scale(-wingFlap, 1);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(-this.size * 0.7, -this.size * 0.5, this.size * 0.85, this.size * 1.2, -0.4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffa000';
+                ctx.beginPath();
+                ctx.ellipse(-this.size * 0.6, this.size * 0.5, this.size * 0.6, this.size * 0.8, -0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Cuerpo
+                ctx.fillStyle = '#3e2723';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 1.8, this.size * 0.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Antenas
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size * 0.7);
+                ctx.quadraticCurveTo(-4, -this.size * 1.3, -6, -this.size * 1.2);
+                ctx.moveTo(0, -this.size * 0.7);
+                ctx.quadraticCurveTo(4, -this.size * 1.3, 6, -this.size * 1.2);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        const butterflies = [
+            new GoldenButterfly(),
+            new GoldenButterfly(),
+            new GoldenButterfly(),
+            new GoldenButterfly()
+        ];
+
+        // ==========================================
+        // 6. TIPOS DE FLORES BOTÁNICAS FLOTANTES
+        // ==========================================
+        class YellowFlower {
+            constructor(x, y, maxRadius = 35, isStatic = false, type = null) {
+                this.x = x;
+                this.y = y;
+                this.maxRadius = maxRadius;
+                this.currentRadius = 0;
+                this.growthSpeed = Math.random() * 0.9 + 0.5;
+                this.isStatic = isStatic;
+                this.vy = isStatic ? 0 : -(Math.random() * 0.35 + 0.15);
+                this.vx = isStatic ? 0 : Math.sin(Math.random() * Math.PI) * 0.25;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.008;
+                this.alpha = 1;
+
+                const flowerTypes = ['sunflower', 'daisy', 'rose'];
+                this.type = type || flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+
+                if (this.type === 'sunflower') {
+                    this.petals = Math.floor(Math.random() * 4) + 14;
+                    this.centerColor = '#3d2503';
+                    this.petalColor = '#ffb700';
+                } else if (this.type === 'daisy') {
+                    this.petals = Math.floor(Math.random() * 3) + 8;
+                    this.centerColor = '#ff9100';
+                    this.petalColor = '#ffee55';
+                } else {
+                    this.petals = 6;
+                    this.centerColor = '#ff6f00';
+                    this.petalColor = '#ffd54f';
+                }
+                this.glow = 15;
+            }
+
+            update() {
+                if (this.currentRadius < this.maxRadius) {
+                    this.currentRadius += this.growthSpeed;
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rotation += this.rotSpeed;
+
+                if (!this.isStatic && this.y < -60) {
+                    this.alpha -= 0.01;
+                }
+
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                this.glow = dist < 120 ? 30 : 15;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = Math.max(0, this.alpha);
+
+                ctx.shadowBlur = this.glow;
+                ctx.shadowColor = '#ffd700';
+
+                const r = this.currentRadius;
+
+                if (this.type === 'sunflower') {
+                    const petalLen = r;
+                    const petalW = r / 3.8;
+                    for (let i = 0; i < this.petals; i++) {
+                        const angle = (Math.PI * 2 / this.petals) * i;
+                        ctx.save();
+                        ctx.rotate(angle);
+                        const grad = ctx.createLinearGradient(0, 0, petalLen, 0);
+                        grad.addColorStop(0, '#fff59d');
+                        grad.addColorStop(0.5, '#ffd700');
+                        grad.addColorStop(1, '#ff9800');
+                        ctx.fillStyle = grad;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.quadraticCurveTo(petalW, petalLen * 0.5, 0, petalLen);
+                        ctx.quadraticCurveTo(-petalW, petalLen * 0.5, 0, 0);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    ctx.fillStyle = this.centerColor;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r * 0.36, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2);
+                    ctx.fill();
+
+                } else if (this.type === 'daisy') {
+                    const petalLen = r * 0.9;
+                    const petalW = r / 2.8;
+                    for (let i = 0; i < this.petals; i++) {
+                        const angle = (Math.PI * 2 / this.petals) * i;
+                        ctx.save();
+                        ctx.rotate(angle);
+                        ctx.fillStyle = '#ffeb3b';
+                        ctx.beginPath();
+                        ctx.ellipse(0, petalLen * 0.55, petalW * 0.7, petalLen * 0.45, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    ctx.fillStyle = '#ff6d00';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r * 0.28, 0, Math.PI * 2);
+                    ctx.fill();
+
+                } else {
+                    for (let layer = 3; layer >= 1; layer--) {
+                        const layerRadius = r * (layer / 3);
+                        const layerPetals = 4 + layer * 2;
+                        for (let i = 0; i < layerPetals; i++) {
+                            const angle = (Math.PI * 2 / layerPetals) * i + layer;
+                            ctx.save();
+                            ctx.rotate(angle);
+                            ctx.fillStyle = layer === 1 ? '#ffa000' : (layer === 2 ? '#ffd54f' : '#ffecb3');
+                            ctx.beginPath();
+                            ctx.arc(0, layerRadius * 0.5, layerRadius * 0.4, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.restore();
+                        }
+                    }
+                    ctx.fillStyle = '#ff8f00';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r * 0.15, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        let flowers = [];
+
+        for (let i = 0; i < 16; i++) {
+            flowers.push(new YellowFlower(
+                Math.random() * width,
+                Math.random() * height,
+                Math.random() * 25 + 20,
+                false
+            ));
+        }
+
+        // ==========================================
+        // 7. CASCADA DE PÉTALOS
+        // ==========================================
+        class PetalParticle {
+            constructor(x, y, isSparkle = false) {
+                this.x = x || Math.random() * width;
+                this.y = y || -20;
+                this.size = isSparkle ? Math.random() * 5 + 3 : Math.random() * 12 + 8;
+                this.vx = (Math.random() - 0.5) * (isSparkle ? 2 : 1.8);
+                this.vy = isSparkle ? Math.random() * 1.5 + 0.5 : Math.random() * 2 + 1.2;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.05;
+                this.color = ['#fff59d', '#ffd54f', '#ffca28', '#ffb300'][Math.floor(Math.random() * 4)];
+                this.alpha = 1;
+            }
+
+            update() {
+                this.x += this.vx + Math.sin(this.y * 0.02) * 0.6;
+                this.y += this.vy;
+                this.rotation += this.rotSpeed;
+
+                if (this.y > height + 20) {
+                    this.alpha -= 0.04;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#ffe082';
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.quadraticCurveTo(this.size / 2, -this.size / 2, this.size, 0);
+                ctx.quadraticCurveTo(this.size / 2, this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        let petals = [];
+
+        function triggerPetalCascade() {
+            for (let i = 0; i < 75; i++) {
+                setTimeout(() => {
+                    petals.push(new PetalParticle(Math.random() * width, -20));
+                }, i * 35);
+            }
+        }
+
+        // ==========================================
+        // 8. LUCIÉRNAGAS INTERACTIVAS
+        // ==========================================
+        function drawFireflies() {
+            fireflies.forEach(f => {
+                f.x += f.vx;
+                f.y += f.vy;
+
+                if (mouse.active) {
+                    const dx = mouse.x - f.x;
+                    const dy = mouse.y - f.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 180) {
+                        f.x += dx * 0.02;
+                        f.y += dy * 0.02;
+                    }
+                }
+
+                if (f.x < 0 || f.x > width) f.vx *= -1;
+                if (f.y < 0 || f.y > height) f.vy *= -1;
+
+                f.alpha += f.pulse;
+                if (f.alpha > 0.95 || f.alpha < 0.25) f.pulse *= -1;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, Math.min(1, f.alpha));
+                ctx.fillStyle = '#ffea00';
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = '#ffd700';
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        // ==========================================
+        // 9. EVENTOS E INTERACCIÓN GENERAL
+        // ==========================================
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('.interactive')) return;
+
+            playChimeSound();
+            flowers.push(new YellowFlower(e.clientX, e.clientY, Math.random() * 25 + 22, false));
+
+            for (let i = 0; i < 7; i++) {
+                const p = new PetalParticle(e.clientX, e.clientY, true);
+                p.vx = (Math.random() - 0.5) * 5;
+                p.vy = (Math.random() - 0.5) * 5;
+                petals.push(p);
+            }
+        });
+
+        document.getElementById('bloomBtn').addEventListener('click', () => {
+            playChimeSound(783.99);
+            triggerPetalCascade();
+            for (let i = 0; i < 8; i++) {
+                flowers.push(new YellowFlower(
+                    Math.random() * width,
+                    height - 40 - Math.random() * 90,
+                    Math.random() * 32 + 20,
+                    true
+                ));
+            }
+        });
+
+        document.getElementById('plantBtn').addEventListener('click', () => {
+            playChimeSound(659.25);
+            const rx = width * 0.15 + Math.random() * width * 0.7;
+            const ry = height * 0.2 + Math.random() * height * 0.6;
+            flowers.push(new YellowFlower(rx, ry, Math.random() * 35 + 25, false));
+        });
+
+        // ==========================================
+        // 10. FRASES Y MODAL DE CARTA PARA SILVANA
+        // ==========================================
+        const quotesForSilvana = [
+            `"Si tuviera una flor amarilla por cada vez que iluminas mi mundo, caminaríamos eternamente en un jardín infinito bajo las estrellas."`,
+            `"Silvana, tu sonrisa tiene la magia de hacer brillar hasta los días más nublados."`,
+            `"Flores amarillas para ti, porque te mereces todo lo bonito, alegre y lleno de luz que este mundo puede ofrecer."`,
+            `"Entre millones de estrellas en el universo, tu brillo es el más especial de todos, Silvana."`,
+            `"Que nunca te falten motivos para sonreír ni flores doradas que te recuerden lo valiosa que eres."`
+        ];
+
+        let quoteIndex = 0;
+        const romanticQuote = document.getElementById('romanticQuote');
+
+        function changeQuote() {
+            romanticQuote.style.opacity = '0';
+            setTimeout(() => {
+                quoteIndex = (quoteIndex + 1) % quotesForSilvana.length;
+                romanticQuote.innerText = quotesForSilvana[quoteIndex];
+                romanticQuote.style.opacity = '1';
+            }, 450);
+        }
+
+        setInterval(changeQuote, 7000);
+
+        const letterModal = document.getElementById('letterModal');
+        const messageBtn = document.getElementById('messageBtn');
+        const closeLetterBtn = document.getElementById('closeLetterBtn');
+        const closeLetterBtn2 = document.getElementById('closeLetterBtn2');
+        const nextLetterQuoteBtn = document.getElementById('nextLetterQuoteBtn');
+
+        messageBtn.addEventListener('click', () => {
+            playChimeSound(880.00);
+            letterModal.classList.remove('hidden');
+        });
+
+        function closeLetter() {
+            letterModal.classList.add('hidden');
+        }
+
+        closeLetterBtn.addEventListener('click', closeLetter);
+        closeLetterBtn2.addEventListener('click', closeLetter);
+
+        nextLetterQuoteBtn.addEventListener('click', () => {
+            changeQuote();
+            playChimeSound(659.25);
+            closeLetter();
+        });
+
+        // ==========================================
+        // 11. TALLER DE RAMO VIRTUAL DESCARGABLE HD
+        // ==========================================
+        const bouquetModal = document.getElementById('bouquetModal');
+        const openBouquetBtn = document.getElementById('openBouquetBtn');
+        const bouquetActionBtn = document.getElementById('bouquetActionBtn');
+        const closeBouquetBtn = document.getElementById('closeBouquetBtn');
+        const bouquetCanvas = document.getElementById('bouquetCanvas');
+        const bCtx = bouquetCanvas.getContext('2d');
+        const bouquetNoteInput = document.getElementById('bouquetNoteInput');
+        const flowerCountText = document.getElementById('flowerCountText');
+        const clearBouquetBtn = document.getElementById('clearBouquetBtn');
+        const downloadBouquetBtn = document.getElementById('downloadBouquetBtn');
+
+        let bouquetRibbonColor = '#ffd700';
+        let bouquetFlowers = [
+            { type: 'sunflower', x: 190, y: 160, size: 42, rot: 0 },
+            { type: 'sunflower', x: 140, y: 185, size: 36, rot: -0.2 },
+            { type: 'sunflower', x: 240, y: 185, size: 36, rot: 0.25 },
+            { type: 'daisy', x: 185, y: 225, size: 32, rot: 0.1 },
+            { type: 'rose', x: 125, y: 235, size: 30, rot: -0.3 },
+            { type: 'rose', x: 250, y: 235, size: 30, rot: 0.3 }
+        ];
+
+        function openBouquetModal() {
+            playChimeSound(783.99);
+            bouquetModal.classList.remove('hidden');
+            renderBouquetCanvas();
+        }
+
+        openBouquetBtn.addEventListener('click', openBouquetModal);
+        bouquetActionBtn.addEventListener('click', openBouquetModal);
+        closeBouquetBtn.addEventListener('click', () => bouquetModal.classList.add('hidden'));
+
+        document.querySelectorAll('.add-flower-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const type = btn.dataset.type;
+                playChimeSound(880);
+
+                if (bouquetFlowers.length >= 14) {
+                    alert("¡Tu ramo ya está lleno y radiante de flores amarillas!");
+                    return;
+                }
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 65 + 10;
+                const bx = 190 + Math.cos(angle) * dist * 0.9;
+                const by = 195 + Math.sin(angle) * dist * 0.7 - 20;
+
+                bouquetFlowers.push({
+                    type: type,
+                    x: Math.max(105, Math.min(275, bx)),
+                    y: Math.max(120, Math.min(255, by)),
+                    size: Math.random() * 8 + 30,
+                    rot: (Math.random() - 0.5) * 0.6
+                });
+
+                renderBouquetCanvas();
+            });
+        });
+
+        const ribbonButtons = document.querySelectorAll('.ribbon-btn');
+        ribbonButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                bouquetRibbonColor = btn.dataset.ribbon;
+                
+                ribbonButtons.forEach(b => {
+                    b.classList.remove('ring-2', 'ring-yellow-400', 'border-yellow-400');
+                    b.classList.add('border-white/40');
+                });
+                btn.classList.remove('border-white/40');
+                btn.classList.add('ring-2', 'ring-yellow-400', 'border-yellow-400');
+
+                playChimeSound(659.25);
+                renderBouquetCanvas();
+            });
+        });
+
+        bouquetNoteInput.addEventListener('input', () => {
+            renderBouquetCanvas();
+        });
+
+        clearBouquetBtn.addEventListener('click', () => {
+            bouquetFlowers = [
+                { type: 'sunflower', x: 190, y: 175, size: 38, rot: 0 }
+            ];
+            renderBouquetCanvas();
+        });
+
+        function renderBouquetCanvas() {
+            const bw = bouquetCanvas.width;
+            const bh = bouquetCanvas.height;
+
+            flowerCountText.innerText = `Flores: ${bouquetFlowers.length}`;
+
+            const bgGrad = bCtx.createRadialGradient(bw/2, bh*0.4, 20, bw/2, bh*0.5, bw);
+            bgGrad.addColorStop(0, '#1f1602');
+            bgGrad.addColorStop(0.5, '#0e0b01');
+            bgGrad.addColorStop(1, '#040300');
+            bCtx.fillStyle = bgGrad;
+            bCtx.fillRect(0, 0, bw, bh);
+
+            bCtx.strokeStyle = 'rgba(255, 215, 0, 0.45)';
+            bCtx.lineWidth = 3;
+            bCtx.strokeRect(10, 10, bw - 20, bh - 20);
+
+            bCtx.fillStyle = '#ffd700';
+            for (let i = 0; i < 30; i++) {
+                bCtx.globalAlpha = Math.sin(i * 99) * 0.4 + 0.5;
+                bCtx.beginPath();
+                bCtx.arc((i * 47) % (bw - 40) + 20, (i * 73) % 260 + 25, (i % 3 === 0 ? 2 : 1), 0, Math.PI * 2);
+                bCtx.fill();
+            }
+            bCtx.globalAlpha = 1;
+
+            bCtx.save();
+            bCtx.strokeStyle = '#2d5a27';
+            bCtx.lineWidth = 5;
+            bCtx.lineCap = 'round';
+            for (let i = -4; i <= 4; i++) {
+                bCtx.beginPath();
+                bCtx.moveTo(190 + i * 12, 230);
+                bCtx.quadraticCurveTo(190, 310, 190 + i * 7, 365);
+                bCtx.stroke();
+            }
+            bCtx.restore();
+
+            bCtx.save();
+            const wrapGrad = bCtx.createLinearGradient(120, 240, 260, 350);
+            wrapGrad.addColorStop(0, '#3a2b16');
+            wrapGrad.addColorStop(0.5, '#261b0c');
+            wrapGrad.addColorStop(1, '#191107');
+            bCtx.fillStyle = wrapGrad;
+            bCtx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+            bCtx.lineWidth = 1.5;
+
+            bCtx.beginPath();
+            bCtx.moveTo(105, 240);
+            bCtx.quadraticCurveTo(190, 265, 275, 240);
+            bCtx.lineTo(210, 360);
+            bCtx.quadraticCurveTo(190, 365, 170, 360);
+            bCtx.closePath();
+            bCtx.fill();
+            bCtx.stroke();
+
+            bCtx.beginPath();
+            bCtx.moveTo(105, 240);
+            bCtx.lineTo(190, 315);
+            bCtx.lineTo(275, 240);
+            bCtx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
+            bCtx.stroke();
+            bCtx.restore();
+
+            bCtx.save();
+            bCtx.fillStyle = '#33742a';
+            bCtx.strokeStyle = '#1d4916';
+            bCtx.lineWidth = 1;
+            const leafAngles = [-1.1, -0.6, 0.6, 1.1, -1.4, 1.4];
+            leafAngles.forEach(ang => {
+                bCtx.save();
+                bCtx.translate(190, 205);
+                bCtx.rotate(ang);
+                bCtx.beginPath();
+                bCtx.ellipse(0, -60, 12, 38, 0, 0, Math.PI * 2);
+                bCtx.fill();
+                bCtx.stroke();
+                bCtx.restore();
+            });
+            bCtx.restore();
+
+            bouquetFlowers.forEach(f => {
+                drawFlowerOnBouquet(f.x, f.y, f.size, f.rot, f.type);
+            });
+
+            bCtx.save();
+            bCtx.fillStyle = bouquetRibbonColor;
+            bCtx.shadowBlur = 10;
+            bCtx.shadowColor = bouquetRibbonColor;
+
+            bCtx.beginPath();
+            bCtx.ellipse(190, 320, 11, 8, 0, 0, Math.PI * 2);
+            bCtx.fill();
+
+            bCtx.beginPath();
+            bCtx.moveTo(190, 320);
+            bCtx.quadraticCurveTo(155, 305, 145, 320);
+            bCtx.quadraticCurveTo(155, 335, 190, 320);
+            bCtx.fill();
+
+            bCtx.beginPath();
+            bCtx.moveTo(190, 320);
+            bCtx.quadraticCurveTo(225, 305, 235, 320);
+            bCtx.quadraticCurveTo(225, 335, 190, 320);
+            bCtx.fill();
+
+            bCtx.lineWidth = 4;
+            bCtx.strokeStyle = bouquetRibbonColor;
+            bCtx.beginPath();
+            bCtx.moveTo(187, 323);
+            bCtx.quadraticCurveTo(170, 345, 160, 365);
+            bCtx.stroke();
+
+            bCtx.beginPath();
+            bCtx.moveTo(193, 323);
+            bCtx.quadraticCurveTo(210, 345, 220, 365);
+            bCtx.stroke();
+            bCtx.restore();
+
+            bCtx.save();
+            bCtx.fillStyle = 'rgba(25, 20, 5, 0.85)';
+            bCtx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+            bCtx.lineWidth = 1.2;
+            bCtx.beginPath();
+            bCtx.roundRect(25, 385, bw - 50, 60, 12);
+            bCtx.fill();
+            bCtx.stroke();
+
+            bCtx.font = "bold 14px 'Playfair Display', serif";
+            bCtx.fillStyle = '#ffd700';
+            bCtx.textAlign = 'center';
+            bCtx.shadowBlur = 8;
+            bCtx.shadowColor = '#ffd700';
+            bCtx.fillText("✨ Para Silvana ✨", bw / 2, 407);
+
+            bCtx.font = "italic 11px 'Montserrat', sans-serif";
+            bCtx.fillStyle = '#fff8dc';
+            bCtx.shadowBlur = 0;
+            const userNote = bouquetNoteInput.value.trim() || "Con todo mi cariño para Silvana ✨";
+            bCtx.fillText(`"${userNote}"`, bw / 2, 428);
+            bCtx.restore();
+
+            bCtx.save();
+            bCtx.font = "bold 13px 'Montserrat', sans-serif";
+            bCtx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+            bCtx.textAlign = 'center';
+            bCtx.fillText("UN JARDÍN ETERNO", bw / 2, 35);
+            bCtx.restore();
+        }
+
+        function drawFlowerOnBouquet(x, y, r, rot, type) {
+            bCtx.save();
+            bCtx.translate(x, y);
+            bCtx.rotate(rot);
+
+            bCtx.shadowBlur = 10;
+            bCtx.shadowColor = '#ffd700';
+
+            if (type === 'sunflower') {
+                const petals = 15;
+                const petalLen = r;
+                const petalW = r / 3.6;
+
+                for (let i = 0; i < petals; i++) {
+                    const ang = (Math.PI * 2 / petals) * i;
+                    bCtx.save();
+                    bCtx.rotate(ang);
+                    const grad = bCtx.createLinearGradient(0, 0, petalLen, 0);
+                    grad.addColorStop(0, '#fff59d');
+                    grad.addColorStop(0.5, '#ffd700');
+                    grad.addColorStop(1, '#ff9800');
+                    bCtx.fillStyle = grad;
+                    bCtx.beginPath();
+                    bCtx.moveTo(0, 0);
+                    bCtx.quadraticCurveTo(petalW, petalLen * 0.5, 0, petalLen);
+                    bCtx.quadraticCurveTo(-petalW, petalLen * 0.5, 0, 0);
+                    bCtx.fill();
+                    bCtx.restore();
+                }
+                bCtx.fillStyle = '#382202';
+                bCtx.beginPath();
+                bCtx.arc(0, 0, r * 0.38, 0, Math.PI * 2);
+                bCtx.fill();
+                bCtx.fillStyle = '#ffa000';
+                bCtx.beginPath();
+                bCtx.arc(0, 0, r * 0.24, 0, Math.PI * 2);
+                bCtx.fill();
+
+            } else if (type === 'daisy') {
+                const petals = 10;
+                const petalLen = r * 0.9;
+                const petalW = r / 2.7;
+
+                for (let i = 0; i < petals; i++) {
+                    const ang = (Math.PI * 2 / petals) * i;
+                    bCtx.save();
+                    bCtx.rotate(ang);
+                    bCtx.fillStyle = '#ffee55';
+                    bCtx.beginPath();
+                    bCtx.ellipse(0, petalLen * 0.55, petalW * 0.7, petalLen * 0.45, 0, 0, Math.PI * 2);
+                    bCtx.fill();
+                    bCtx.restore();
+                }
+                bCtx.fillStyle = '#ff6d00';
+                bCtx.beginPath();
+                bCtx.arc(0, 0, r * 0.3, 0, Math.PI * 2);
+                bCtx.fill();
+
+            } else {
+                for (let layer = 3; layer >= 1; layer--) {
+                    const lr = r * (layer / 3);
+                    const lp = 4 + layer * 2;
+                    for (let i = 0; i < lp; i++) {
+                        const ang = (Math.PI * 2 / lp) * i + layer;
+                        bCtx.save();
+                        bCtx.rotate(ang);
+                        bCtx.fillStyle = layer === 1 ? '#ffa000' : (layer === 2 ? '#ffd54f' : '#ffecb3');
+                        bCtx.beginPath();
+                        bCtx.arc(0, lr * 0.5, lr * 0.4, 0, Math.PI * 2);
+                        bCtx.fill();
+                        bCtx.restore();
+                    }
+                }
+                bCtx.fillStyle = '#ff8f00';
+                bCtx.beginPath();
+                bCtx.arc(0, 0, r * 0.16, 0, Math.PI * 2);
+                bCtx.fill();
+            }
+
+            bCtx.restore();
+        }
+
+        downloadBouquetBtn.addEventListener('click', () => {
+            playChimeSound(1046.50);
+            triggerPetalCascade();
+
+            const image = bouquetCanvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.download = `Flores_Amarillas_para_Silvana.png`;
+            link.href = image;
+            link.click();
+        });
+
+        // ==========================================
+        // 12. BUCLE PRINCIPAL DE ANIMACIÓN
+        // ==========================================
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 4, 0, 0.28)';
+            ctx.fillRect(0, 0, width, height);
+
+            // 1. Fondo de Estrellas y Constelación Silvana
+            drawStarsAndConstellation();
+
+            // 2. Luciérnagas
+            drawFireflies();
+
+            // 3. Jardín de Tallos Vivos Creciendo
+            drawGardenStems();
+
+            // 4. Flores Flotantes en el Espacio
+            for (let i = flowers.length - 1; i >= 0; i--) {
+                const flower = flowers[i];
+                flower.update();
+                flower.draw();
+
+                if (flower.alpha <= 0) {
+                    flowers.splice(i, 1);
+                }
+            }
+
+            if (flowers.length < 8) {
+                flowers.push(new YellowFlower(
+                    Math.random() * width,
+                    height + 30,
+                    Math.random() * 25 + 20,
+                    false
+                ));
+            }
+
+            // 5. Cascada de Pétalos y Polvillo
+            for (let i = petals.length - 1; i >= 0; i--) {
+                const petal = petals[i];
+                petal.update();
+                petal.draw();
+
+                if (petal.alpha <= 0 || petal.y > height + 40) {
+                    petals.splice(i, 1);
+                }
+            }
+
+            // 6. Mariposas Doradas Aleteando
+            butterflies.forEach(b => {
+                b.update();
+                b.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            animate();
+            renderBouquetCanvas();
+        };
+    </script>
+</body>
+</html>
