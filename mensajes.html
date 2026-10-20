@@ -11,7 +11,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, onValue, runTransaction, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, onValue, update, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAJ9GKC0aZTJrFJUZYqAWfZFkH6gAMw0NA",
@@ -136,6 +136,102 @@
         .then((snap) => { if (!snap.exists()) { vacio.hidden = false; } })
         .catch(() => { vacio.hidden = false; });
 
+      // ---------- Selector de reacciones (uno solo, flota sobre el mensaje) ----------
+      const selector = document.createElement("div");
+      selector.className = "selector-reacciones";
+      selector.setAttribute("role", "toolbar");
+      selector.setAttribute("aria-label", "Elegir reacción");
+      selector.hidden = true;
+      const botonesSelector = REACCIONES.map((reaccion) => {
+        const boton = document.createElement("button");
+        boton.type = "button";
+        boton.textContent = reaccion.emoji;
+        boton.dataset.reaccion = reaccion.clave;
+        boton.setAttribute("aria-label", reaccion.nombre);
+        selector.appendChild(boton);
+        return boton;
+      });
+      document.body.appendChild(selector);
+
+      let selectorAbierto = null;
+
+      function marcarSelector() {
+        const nombre = nombreInput.value;
+        botonesSelector.forEach((boton) => {
+          const activa = selectorAbierto.votos[boton.dataset.reaccion][nombre] === true;
+          boton.classList.toggle("seleccionada", activa);
+          boton.setAttribute("aria-pressed", String(activa));
+        });
+      }
+
+      function abrirSelector(contexto) {
+        selectorAbierto = contexto;
+        marcarSelector();
+        selector.hidden = false;
+
+        const caja = contexto.elemento.getBoundingClientRect();
+        const ancho = selector.offsetWidth;
+        const alto = selector.offsetHeight;
+        // Encima del mensaje; si no hay sitio, debajo.
+        let arriba = caja.top - alto - 8;
+        if (arriba < 8) {
+          arriba = caja.bottom + 8;
+        }
+        const alineadoDerecha = contexto.elemento.classList.contains("rodrigo");
+        let izquierda = alineadoDerecha ? caja.right - ancho : caja.left;
+        izquierda = Math.max(8, Math.min(izquierda, window.innerWidth - ancho - 8));
+        selector.style.top = `${arriba}px`;
+        selector.style.left = `${izquierda}px`;
+      }
+
+      function cerrarSelector() {
+        selector.hidden = true;
+        selectorAbierto = null;
+      }
+
+      // Cada persona tiene una sola reaccion por mensaje: elegir otra reemplaza la anterior
+      // y elegir la misma la quita.
+      selector.addEventListener("click", async (evento) => {
+        const boton = evento.target.closest("button[data-reaccion]");
+        if (!boton || !selectorAbierto) {
+          return;
+        }
+        const { clave, votos } = selectorAbierto;
+        const nombre = nombreInput.value;
+        const elegida = boton.dataset.reaccion;
+        const yaActiva = votos[elegida][nombre] === true;
+        const cambios = {};
+        REACCIONES.forEach((reaccion) => {
+          const ruta = `mensajes/${clave}/reacciones/${reaccion.clave}/${nombre}`;
+          if (reaccion.clave === elegida) {
+            cambios[ruta] = yaActiva ? null : true;
+          } else if (votos[reaccion.clave][nombre] === true) {
+            cambios[ruta] = null;
+          }
+        });
+        cerrarSelector();
+        try {
+          await update(ref(db), cambios);
+        } catch (error) {
+          console.warn("[chat] no se pudo guardar la reacción", error);
+        }
+      });
+
+      document.addEventListener("pointerdown", (evento) => {
+        if (selectorAbierto && !selector.contains(evento.target) && !selectorAbierto.elemento.contains(evento.target)) {
+          cerrarSelector();
+        }
+      });
+      document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape" && selectorAbierto) {
+          const elemento = selectorAbierto.elemento;
+          cerrarSelector();
+          elemento.focus();
+        }
+      });
+      chatBox.addEventListener("scroll", cerrarSelector, { passive: true });
+      window.addEventListener("resize", cerrarSelector);
+
       let ultimoDia = null;
 
       onChildAdded(ref(db, "mensajes"), (data) => {
@@ -173,63 +269,79 @@
 
         const reaccionesDiv = document.createElement("div");
         reaccionesDiv.className = "reacciones";
-        reaccionesDiv.setAttribute("aria-label", "Reacciones al mensaje");
-
-        const estadoReacciones = document.createElement("span");
-        estadoReacciones.className = "estado-reacciones";
-        estadoReacciones.setAttribute("role", "status");
-        estadoReacciones.setAttribute("aria-live", "polite");
+        reaccionesDiv.hidden = true;
 
         const votos = {};
-        const botonesReaccion = REACCIONES.map((reaccion) => {
-          const boton = document.createElement("button");
-          boton.className = "reaccion";
-          boton.type = "button";
-          boton.dataset.reaccion = reaccion.clave;
-          boton.setAttribute("aria-pressed", "false");
-          reaccionesDiv.appendChild(boton);
-          votos[reaccion.clave] = {};
-          return boton;
-        });
+        REACCIONES.forEach((reaccion) => { votos[reaccion.clave] = {}; });
 
         function actualizarReacciones() {
-          REACCIONES.forEach((reaccion, indice) => {
+          const nombre = nombreInput.value;
+          reaccionesDiv.textContent = "";
+          REACCIONES.forEach((reaccion) => {
             const personas = votos[reaccion.clave];
             const cantidad = Object.values(personas).filter((activo) => activo === true).length;
-            const seleccionada = personas[nombreInput.value] === true;
-            const boton = botonesReaccion[indice];
-            boton.textContent = cantidad ? `${reaccion.emoji} ${cantidad}` : reaccion.emoji;
-            boton.setAttribute("aria-label", `${reaccion.nombre}: ${cantidad}`);
-            boton.setAttribute("aria-pressed", String(seleccionada));
-            boton.classList.toggle("seleccionada", seleccionada);
+            if (!cantidad) {
+              return;
+            }
+            const chip = document.createElement("span");
+            chip.className = "reaccion";
+            chip.classList.toggle("seleccionada", personas[nombre] === true);
+            chip.textContent = cantidad > 1 ? `${reaccion.emoji} ${cantidad}` : reaccion.emoji;
+            chip.setAttribute("aria-label", `${reaccion.nombre}: ${cantidad}`);
+            reaccionesDiv.appendChild(chip);
           });
+          reaccionesDiv.hidden = !reaccionesDiv.childElementCount;
+          div.classList.toggle("con-reaccion", !reaccionesDiv.hidden);
         }
 
         actualizarVistasReacciones.push(actualizarReacciones);
-        actualizarReacciones();
 
-        reaccionesDiv.addEventListener("click", async (evento) => {
-          const boton = evento.target.closest("button[data-reaccion]");
-          if (!boton || boton.disabled) {
+        const contexto = { elemento: div, clave: data.key, votos };
+
+        // Tocar el mensaje o mantenerlo presionado abre las reacciones.
+        div.tabIndex = 0;
+        div.setAttribute("role", "button");
+        div.setAttribute("aria-haspopup", "true");
+
+        let pulsacionLarga = null;
+        let abrioConPulsacion = false;
+        function cancelarPulsacion() {
+          clearTimeout(pulsacionLarga);
+          pulsacionLarga = null;
+        }
+        div.addEventListener("pointerdown", (evento) => {
+          if (evento.pointerType === "mouse") {
             return;
           }
-          const reaccion = REACCIONES.find((opcion) => opcion.clave === boton.dataset.reaccion);
-          if (!reaccion) {
+          abrioConPulsacion = false;
+          cancelarPulsacion();
+          pulsacionLarga = setTimeout(() => {
+            abrioConPulsacion = true;
+            abrirSelector(contexto);
+          }, 450);
+        });
+        ["pointerup", "pointercancel", "pointerleave", "pointermove"].forEach((tipo) => {
+          div.addEventListener(tipo, cancelarPulsacion);
+        });
+        div.addEventListener("click", () => {
+          if (abrioConPulsacion) {
+            abrioConPulsacion = false;
             return;
           }
-
-          boton.disabled = true;
-          estadoReacciones.textContent = "";
-          try {
-            await runTransaction(
-              ref(db, `mensajes/${data.key}/reacciones/${reaccion.clave}/${nombreInput.value}`),
-              (activo) => activo === true ? null : true
-            );
-          } catch (error) {
-            console.warn("[chat] no se pudo guardar la reacción", error);
-            estadoReacciones.textContent = "No se pudo guardar la reacción. Inténtalo de nuevo.";
-          } finally {
-            boton.disabled = false;
+          if (selectorAbierto && selectorAbierto.elemento === div) {
+            cerrarSelector();
+          } else {
+            abrirSelector(contexto);
+          }
+        });
+        div.addEventListener("contextmenu", (evento) => {
+          evento.preventDefault();
+          abrirSelector(contexto);
+        });
+        div.addEventListener("keydown", (evento) => {
+          if (evento.target === div && (evento.key === "Enter" || evento.key === " ")) {
+            evento.preventDefault();
+            abrirSelector(contexto);
           }
         });
 
@@ -239,16 +351,17 @@
             votos[reaccion.clave] = guardadas[reaccion.clave] || {};
           });
           actualizarReacciones();
+          if (selectorAbierto && selectorAbierto.elemento === div) {
+            marcarSelector();
+          }
         }, (error) => {
           console.warn("[chat] no se pudieron cargar las reacciones", error);
-          estadoReacciones.textContent = "No se pudieron cargar las reacciones.";
         });
 
         div.appendChild(strong);
         div.appendChild(texto);
         div.appendChild(horaDiv);
         div.appendChild(reaccionesDiv);
-        div.appendChild(estadoReacciones);
 
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -328,7 +441,7 @@
       min-height: 0;
       overflow-y: auto;
       overscroll-behavior: contain;
-      padding: 16px 14px 10px;
+      padding: 16px 14px 24px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -366,6 +479,11 @@
       overflow-wrap: anywhere;
       white-space: pre-wrap;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;     /* sin menu del sistema al mantener presionado */
+      -webkit-tap-highlight-color: transparent;
     }
 
     .message strong {
@@ -400,37 +518,64 @@
       opacity: 0.7;
     }
 
+    /* Reaccion ya elegida: insignia pegada al borde inferior del mensaje. */
     .reacciones {
+      position: absolute;
+      bottom: -13px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 6px;
+      gap: 4px;
     }
+    .reacciones[hidden] { display: none; }
+    .silvana .reacciones { left: 10px; }
+    .rodrigo .reacciones { right: 10px; }
+    .message.con-reaccion { margin-bottom: 14px; }
 
     .reaccion {
-      min-width: 32px;
-      min-height: 28px;
-      padding: 3px 7px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 1px 7px;
+      border: 1px solid rgba(255, 158, 187, 0.35);
       border-radius: 999px;
       color: #fff;
-      background: rgba(20, 5, 15, 0.35);
-      font: inherit;
+      background: #3a1230;
       font-size: 0.82rem;
+      line-height: 1.5;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    }
+    .reaccion.seleccionada { border-color: #ff9ebb; background: #7a1d45; }
+
+    /* ---------- Selector flotante ---------- */
+    .selector-reacciones {
+      position: fixed;
+      z-index: 10;
+      display: flex;
+      gap: 2px;
+      padding: 5px 8px;
+      border: 1px solid rgba(255, 158, 187, 0.3);
+      border-radius: 999px;
+      background: rgba(40, 10, 32, 0.96);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      animation: selector-entra 0.16s ease-out;
+    }
+    .selector-reacciones[hidden] { display: none; }
+
+    .selector-reacciones button {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      font-size: 1.6rem;
+      line-height: 1;
       cursor: pointer;
+      transition: transform 0.12s;
     }
+    .selector-reacciones button:hover,
+    .selector-reacciones button:focus-visible { transform: scale(1.25); outline: none; }
+    .selector-reacciones button.seleccionada { background: rgba(255, 77, 109, 0.4); }
 
-    .reaccion:hover, .reaccion.seleccionada {
-      border-color: #ff9ebb;
-      background: rgba(255, 77, 109, 0.38);
-    }
-
-    .reaccion:disabled { opacity: 0.6; cursor: wait; }
-
-    .estado-reacciones {
-      display: block;
-      color: #ffc2d1;
-      font-size: 0.75rem;
+    @keyframes selector-entra {
+      from { opacity: 0; transform: translateY(6px) scale(0.9); }
+      to   { opacity: 1; transform: none; }
     }
 
     @keyframes entrar {
@@ -517,7 +662,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .fade-in, #vacio .corazon { animation: none; }
+      .fade-in, #vacio .corazon, .selector-reacciones { animation: none; }
       #chat-box { scroll-behavior: auto; }
     }
   </style>
