@@ -232,6 +232,89 @@
       chatBox.addEventListener("scroll", cerrarSelector, { passive: true });
       window.addEventListener("resize", cerrarSelector);
 
+      // ---------- Visto ----------
+      // Cada quien guarda en lecturas/<nombre>/hasta la hora del ultimo mensaje ajeno que
+      // tuvo a la vista con la pagina visible. El autor ve "Visto" bajo su ultimo mensaje leido.
+      const registrosMensajes = [];          // { ts, nombre, horaDiv }
+      const registrosVisibles = new Set();
+      const vistoEl = document.createElement("span");
+      vistoEl.className = "visto";
+      let lecturas = null;                   // null hasta que llega la primera lectura
+      let temporizadorVisto = null;
+
+      function mostrarVisto() {
+        vistoEl.remove();
+        if (!lecturas) {
+          return;
+        }
+        const yo = nombreInput.value;
+        const otro = Object.entries(lecturas).find(([persona, dato]) => persona !== yo && dato && dato.hasta);
+        if (!otro) {
+          return;
+        }
+        const { hasta, cuando } = otro[1];
+        for (let i = registrosMensajes.length - 1; i >= 0; i--) {
+          const registro = registrosMensajes[i];
+          if (registro.nombre === yo && registro.ts && registro.ts <= hasta) {
+            const hoy = claveDia(Date.now()) === claveDia(cuando || hasta);
+            const momento = hoy ? formatearHora(cuando || hasta) : `${etiquetaDia(cuando || hasta)} ${formatearHora(cuando || hasta)}`;
+            vistoEl.textContent = ` · Visto ${momento}`;
+            registro.horaDiv.appendChild(vistoEl);
+            return;
+          }
+        }
+      }
+
+      function marcarLeido() {
+        if (!lecturas || document.visibilityState !== "visible") {
+          return;
+        }
+        const yo = nombreInput.value;
+        let hasta = 0;
+        registrosVisibles.forEach((registro) => {
+          if (registro.nombre !== yo && registro.ts > hasta) {
+            hasta = registro.ts;
+          }
+        });
+        if (hasta <= ((lecturas[yo] && lecturas[yo].hasta) || 0)) {
+          return;
+        }
+        update(ref(db), {
+          [`lecturas/${yo}/hasta`]: hasta,
+          [`lecturas/${yo}/cuando`]: Date.now()
+        }).catch((error) => console.warn("[chat] no se pudo guardar la lectura", error));
+      }
+
+      function programarMarcado() {
+        clearTimeout(temporizadorVisto);
+        temporizadorVisto = setTimeout(marcarLeido, 500);
+      }
+
+      const observadorVisto = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+          const registro = entrada.target._registro;
+          if (entrada.isIntersecting) {
+            registrosVisibles.add(registro);
+          } else {
+            registrosVisibles.delete(registro);
+          }
+        });
+        programarMarcado();
+      }, { root: chatBox, threshold: 0.5 });
+
+      onValue(ref(db, "lecturas"), (snapshot) => {
+        lecturas = snapshot.val() || {};
+        mostrarVisto();
+        programarMarcado();
+      }, (error) => {
+        console.warn("[chat] no se pudieron cargar las lecturas", error);
+      });
+      document.addEventListener("visibilitychange", programarMarcado);
+      nombreInput.addEventListener("change", () => {
+        mostrarVisto();
+        programarMarcado();
+      });
+
       let ultimoDia = null;
 
       onChildAdded(ref(db, "mensajes"), (data) => {
@@ -363,7 +446,13 @@
         div.appendChild(horaDiv);
         div.appendChild(reaccionesDiv);
 
+        const registro = { ts: msg.timestamp || 0, nombre: msg.nombre, horaDiv };
+        div._registro = registro;
+        registrosMensajes.push(registro);
+
         chatBox.appendChild(div);
+        observadorVisto.observe(div);
+        mostrarVisto();
         chatBox.scrollTop = chatBox.scrollHeight;
       });
     });
@@ -519,6 +608,8 @@
     }
 
     /* Reaccion ya elegida: insignia pegada al borde inferior del mensaje. */
+    .visto { font-weight: 600; }
+
     .reacciones {
       position: absolute;
       bottom: -13px;
