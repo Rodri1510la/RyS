@@ -20,53 +20,31 @@ body {
   perspective: 1000px;
 }
 
-#lyrics {
-  font-size: 28px;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  color: white;
+/* ---------- Texto de la pagina ----------
+   Las flores ocupan el centro y la parte baja: el titulo y el mensaje van arriba (en
+   pantallas anchas, a la izquierda) y la letra de la cancion abajo, como subtitulo.
+   Asi el texto nunca queda encima de las flores. */
+.encabezado {
   position: absolute;
-  margin-bottom: 20%;
-  z-index: 1;
-  font-weight: bold;
-  letter-spacing: 4px;
-}
-@media only screen and (max-width: 600px) {
-  /* Estilos específicos para dispositivos con un ancho máximo de 600px */
-  #lyrics {
-      font-size: 14px; /* Reduce el tamaño del texto para dispositivos más pequeños */
-      margin-bottom: 530px;
-      letter-spacing: 3px;
-  }
-
-}
-.titulo {
-  margin-bottom: 180px;
-  font-family: "Arial Narrow", Arial, sans-serif;
-  color: yellow;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 92%;
-  font-weight: bold;
-  letter-spacing: 10px;
-  opacity: 0;
-  animation: fadeIn 3s ease-in-out forwards;
-  text-align: center;
-}
-
-/* El div "FELIZ 4TO MESARIO" no tenia ni un solo estilo: heredaba #333 sobre
-   el fondo negro y era invisible. Asi se convierte en el titulo de bienvenida. */
-.header-text {
-  position: absolute;
-  top: calc(var(--nav-h, 4rem) + 20px);
+  top: calc(var(--nav-h, 4rem) + 12px);
   left: 0;
-  width: 100%;
-  z-index: 5;
+  right: 0;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.header-text {
+  margin: 0;
   text-align: center;
-  font-family: "Oswald", sans-serif;
-  font-size: clamp(1.6rem, 5vw, 3.5rem);
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(2.6rem, 10vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.1;
   color: #fff;
   text-shadow: 0 0 16px rgba(255, 77, 109, 0.9), 0 2px 6px rgba(0, 0, 0, 0.6);
   -webkit-animation: brillo-header 3s ease-in-out infinite alternate;
@@ -80,6 +58,59 @@ body {
 @keyframes brillo-header {
   from { color: #fff; }
   to { color: #ffb3c6; }
+}
+
+/* Mensaje: aparece con un fundido y, pasado un rato, js/anim.js lo oculta. */
+.titulo {
+  width: min(100%, 30rem);
+  padding: 14px 18px 12px;
+  border: 1px solid rgba(255, 235, 150, 0.2);
+  border-radius: 16px;
+  background: rgba(6, 10, 8, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-family: "Kalam", "Segoe UI", sans-serif;
+  font-size: clamp(1rem, 3.8vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff3c4;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  animation: fadeIn 3s ease-in-out forwards;
+}
+
+.titulo__amo {
+  display: block;
+  margin-top: 2px;
+  font-family: "Great Vibes", cursive;
+  font-size: 2.2rem;
+  line-height: 1.2;
+  color: #ffd45c;
+}
+
+/* Letra de la cancion como subtitulo; sin texto no se ve nada. */
+#lyrics {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 12;
+  width: max-content;
+  max-width: calc(100% - 150px);   /* deja libre el boton de musica */
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: "Kalam", "Segoe UI", sans-serif;
+  font-size: clamp(1rem, 3.6vw, 1.4rem);
+  line-height: 1.4;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+#lyrics:empty {
+  display: none;
 }
 
 /* Boton de musica: el <audio autoplay> no suena porque los navegadores lo
@@ -101,17 +132,40 @@ body {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
-@media only screen and (max-width: 600px) {
-  .header-text {
-    letter-spacing: 0.06em;
-  }
+/* Celulares de pantalla corta: las flores suben mas, se compacta el texto. */
+@media (max-height: 720px) and (max-width: 600px) {
+  .header-text { font-size: 2.4rem; }
+  .titulo { padding: 10px 14px 8px; font-size: 0.95rem; line-height: 1.5; background: rgba(6, 10, 8, 0.72); }
+  .titulo__amo { font-size: 1.8rem; }
 }
+
+/* Pantallas anchas: el texto va a la izquierda y las flores quedan despejadas al centro. */
+@media (min-width: 900px) and (min-aspect-ratio: 5/4) {
+  .encabezado {
+    right: auto;
+    left: 2rem;
+    align-items: flex-start;
+    width: clamp(15rem, calc(50vw - 17rem), 26rem);
+    padding: 0;
+  }
+  .header-text { text-align: left; }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 

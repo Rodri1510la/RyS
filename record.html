@@ -3,61 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R Y S</title>
-    <link rel="stylesheet" href="css/record.css">
+    <title>Récord de basket</title>
     <link rel="icon" href="img/flowers.png" type="image/x-icon">
-      <!-- Swiper CSS -->
-      <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
-    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Oswald:wght@300;400;600&family=Doto:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/efectos.css">
+    <link rel="stylesheet" href="css/record.css">
     <link rel="stylesheet" href="css/nav.css">
-  </head>
+</head>
 <body data-hearts>
-    
-    <br />
-    <h1>
-        Record Actual<span>: 342</span>
-    </h1>
-    <div class="swiper-container reveal">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="img/Record/333.jpeg" alt="Image 1"></div>
-            <div class="swiper-slide"><img src="img/Record/339.jpeg" alt="Image 2"></div>
-            <div class="swiper-slide"><img src="img/Record/actual.jpeg" alt="Image 3"></div>
 
-            
-            
-            <!-- Agrega más imágenes estáticas según sea necesario -->
+<main class="pagina">
+    <header class="portada">
+        <h1>Récord actual</h1>
+        <div class="marcador" role="img" aria-label="342 puntos">
+            <span class="cifra" id="cifra" aria-hidden="true" data-meta="342">342</span>
         </div>
-        <!-- Add Pagination -->
-        <div class="swiper-pagination"></div>
-        <!-- Add Navigation -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </div>
+        <p class="sub">Nuestro marcador más alto en el Alley Oop</p>
+    </header>
 
-    <!-- Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <!-- Initialize Swiper -->
-    <script>
-        var swiper = new Swiper('.swiper-container', {
-            slidesPerView: 1,
-            spaceBetween: 10,
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
-    </script>
-  <script src="js/efectos.js" defer></script>
-  <script src="js/nav.js" defer></script>
+    <section class="camino" aria-labelledby="camino-titulo">
+        <h2 id="camino-titulo">Cómo fue subiendo</h2>
+        <ol>
+            <li>
+                <figure class="foto reveal">
+                    <img src="img/Record/333.jpeg" alt="Marcador del Alley Oop con 333 puntos" data-zoom data-caption="333 puntos" loading="lazy">
+                    <figcaption><span class="pts">333</span><span class="delta">Primer registro</span></figcaption>
+                </figure>
+            </li>
+            <li>
+                <figure class="foto reveal">
+                    <img src="img/Record/339.jpeg" alt="Marcador del Alley Oop con 339 puntos" data-zoom data-caption="339 puntos" loading="lazy">
+                    <figcaption><span class="pts">339</span><span class="delta">+6 que el anterior</span></figcaption>
+                </figure>
+            </li>
+            <li>
+                <figure class="foto foto--actual reveal">
+                    <img src="img/Record/actual.jpeg" alt="Marcador del Alley Oop con 342 puntos" data-zoom data-caption="342 puntos, el récord actual" loading="lazy">
+                    <figcaption><span class="pts">342</span><span class="delta">+3 y es el récord actual</span></figcaption>
+                </figure>
+            </li>
+        </ol>
+    </section>
+</main>
+
+<script src="js/record.js" defer></script>
+<script src="js/efectos.js" defer></script>
+<script src="js/nav.js" defer></script>
 </body>
 </html>

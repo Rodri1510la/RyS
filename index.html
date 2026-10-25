@@ -4,117 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>R Y S</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="img/flowers.png" type="image/x-icon">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
-    </style>
-
-       <!-- Google Analytics -->
-       <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJFXE1WZ5T"></script>
-       <script>
-           window.dataLayer = window.dataLayer || [];
-           function gtag(){dataLayer.push(arguments);}
-           gtag('js', new Date());
-           gtag('config', 'G-RJFXE1WZ5T');
-       </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/efectos.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/nav.css">
-  </head>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJFXE1WZ5T"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RJFXE1WZ5T');
+    </script>
+</head>
 <body data-hearts>
 
-    <br>
-<h1>
-    Rod <span>Silv</span>
-</h1>
-<div class="wrap">
-    <div class="postcard1"></div>
-    <div class="postcard">
-      <div class="letter"></div>
-      <p>
-        <span>Mi Muñequita,</span>
-        <br />
-        Siempre quisiste que te escriba una carta , asi que hice esto<br />para ti.
-        Esta imagen me hace acordar a nosotros en la playa, quien iba a <br />pensartodo lo que
-        nos depararia el destino,jum,pero estoy feliz de cada <br /> cosa  que vivi a tu lado,me
-        hiciste muy feliz niñita,gracias por eso y por los <br />momentos lindos,apasionados,tiernos y 
-        llenos de risa,me hubiera gustado<br /> darte la carta en persona,pero bueno ... almenos soy chistemas
-        Besos y <br /> recuerda buscarme en los tulipanes y siempre en recuerdos bonitos.
-        <br />
-        Recuerda que siempre estaremos aqui ... en esta pagina y nuestros <br /> corazones y aqui
-        
-        https://drive.google.com/drive/folders/1DdNf_kprWidRtUxc4qpgSfvuiJtFhhfm?usp=sharing
-        <br />
-        <span class="ullu">
-          Siempre Tuyo Mor,
-          <br />
-          Pollito Rod</span
-        >
-      </p>
-      <div class="address">
-       
-      </div>
-    </div>
-  </div>
+<main class="pagina" id="escena">
+    <h1>Rod &amp; Silv</h1>
 
-  <footer>
-    <p>Hecho por : Tu Chinito. PSDT: Presiona la Carta</p>
-  </footer>
-  <div style="text-align: center; margin: 40px 0;">
-  <a href="mensajes.html" class="boton-chat">
-    💌 Dejame mensajes aqui cuando me extrañes
-  </a>
-</div>
-<p class="aviso-carta">Presiona Abrir y lee la carta</p>
-<div class="envlope-wrapper">
-    <div id="envelope" class="close">
-        <div class="front flap"></div>
-        <div class="front pocket"></div>
-        <div class="letter">
-            <div class="words line1"></div>
-            <div class="words line2"></div>
-            <div class="words line3"></div>
-            <div class="words line4"></div>
+    <!-- El sobre es lo primero que se ve: al tocarlo se abre y la carta se despliega debajo. -->
+    <button class="sobre" id="sobre" type="button" tabindex="-1" aria-hidden="true">
+        <span class="sobre__fondo"></span>
+        <span class="sobre__mini"></span>
+        <span class="sobre__bolsillo"></span>
+        <span class="sobre__solapa"></span>
+        <span class="sobre__sello">&#10084;</span>
+    </button>
+
+    <button class="pista" id="pista" type="button" aria-expanded="false" aria-controls="carta">Toca el sobre para abrirlo</button>
+
+    <section class="carta" id="carta" aria-label="Carta para Silv">
+        <div class="carta__interior">
+            <article class="papel">
+                <p class="saludo">Mi Muñequita,</p>
+                <p>Siempre quisiste que te escriba una carta, así que hice esto para ti. Esta imagen me hace acordar a nosotros en la playa, ¿quién iba a pensar todo lo que nos depararía el destino? Jum, pero estoy feliz de cada cosa que viví a tu lado.</p>
+                <p>Me hiciste muy feliz, niñita. Gracias por eso y por los momentos lindos, apasionados, tiernos y llenos de risa.</p>
+                <p>Me hubiera gustado darte la carta en persona, pero bueno... al menos soy chistemas. Besos, y recuerda buscarme en los tulipanes y siempre en recuerdos bonitos.</p>
+                <p>Recuerda que siempre estaremos aquí... en esta página y en nuestros corazones, y también aquí:</p>
+                <p><a class="enlace" href="https://drive.google.com/drive/folders/1DdNf_kprWidRtUxc4qpgSfvuiJtFhhfm?usp=sharing" target="_blank" rel="noopener">Nuestros recuerdos en Drive</a></p>
+                <p class="firma">Siempre tuyo, Mor,<br>Pollito Rod</p>
+            </article>
+
+            <div class="acciones">
+                <a href="mensajes.html" class="boton"><span aria-hidden="true">💌</span> Déjame mensajes aquí cuando me extrañes</a>
+                <button type="button" class="boton boton--suave" id="pdf">Descargar mi carta en PDF</button>
+            </div>
         </div>
-        <div class="hearts">
-            <div class="heart a1"></div>
-            <div class="heart a2"></div>
-            <div class="heart a3"></div>
-        </div>
-    </div>
-</div>
-<div class="reset">
-    <button id="open">Abrir</button>
-    <button id="reset">Cerrar</button>
-</div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script><script  src="js/script.js"></script>
-<script>
-    
-    function showCustomAlert() {
-        var alertBox = document.getElementById("customAlert");
-        if (alertBox) {
-            alertBox.style.display = "block";
-        }
-    }
+    </section>
 
-    function hideCustomAlert() {
-        var alertBox = document.getElementById("customAlert");
-        if (alertBox) {
-            alertBox.style.display = "none";
-        }
-    }
+    <footer>Hecho por tu Chinito 💕</footer>
+</main>
 
-    var button = document.getElementById("mensajeButton");
-
-    // No existia ningun #mensajeButton en la pagina: addEventListener sobre
-    // null lanzaba TypeError y el aviso nunca aparecia. Ahora solo se registra
-    // si el boton existe de verdad.
-    if (button) {
-        button.addEventListener("click", function () {
-            showCustomAlert();
-        });
-    }
-</script>
+<script src="js/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     // jsPDF no puede usar la URL del <img> directamente: addImage solo acepta
@@ -130,7 +75,7 @@
         });
     }
 
-    document.getElementById("envelope").addEventListener("click", async function () {
+    document.getElementById("pdf").addEventListener("click", async function () {
         // Sin jsPDF (CDN caido o sin internet) no hay nada que generar.
         if (typeof window.jspdf === "undefined") {
             console.warn("[index] jsPDF no cargo");

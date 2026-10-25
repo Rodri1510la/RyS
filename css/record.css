@@ -1,74 +1,159 @@
-/* Antes había dos reglas body{} seguidas: la segunda (línea 13) declaraba
-   linear-gradient(...), url(bday.gif) y la línea 16 volvía a poner
-   background-image, matando el oscurecido y el bday.gif (además estaba como
-   ruta relativa rota). Ahora hay una sola regla con el degradado correcto. */
+/* Récord de basket (record.html): el marcador grande arriba y, debajo, las tres fotos
+   con cuánto subió el récord cada vez. Las cifras usan Doto (puntos tipo marcador LED). */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --led: #ff2a3d;
+  --rosa-suave: #ffc2d1;
+}
+
 body {
-    color: #ffffff;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 16px 48px;
-    font-family: 'Bungee', cursive;
-    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-                url('../img/Record/basketduo.jpeg');
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: #fff;
+  font-family: "Oswald", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(rgba(10, 4, 8, 0.55), rgba(10, 4, 8, 0.82)),
+    url("../img/Record/basketduo.jpeg") center / cover no-repeat;
+  background-color: #0a0408;
 }
 
-
-
-
-
-  .swiper-container {
-    width: 100%;
-    /* height:100% dentro de un body con min-height:100vh empujaba el
-       carrusel y sus dots de paginacion por debajo del borde inferior. */
-    height: min(65vh, 560px);
-  }
-  .swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-  }
-  .swiper-slide img {
-    width: auto;
-    height: auto;
-    max-height: 500px; /* Ajusta la altura máxima según tus necesidades */
-    max-width: 100%; /* Ajusta el ancho máximo para que no exceda el contenedor */
-  }
-  h1 {
-    font-size: clamp(1.8rem, 6vw, 4rem);
-    margin-top: 0;
-    margin-bottom: 32px;
-    color: rgb(255, 255, 255);
-    text-align: center;
-  }
-
-  h1 span {
-    color: rgb(255, 90, 90);
-  }
-
-/* ---- Mejora visual ---- */
-h1 { font-family: 'Great Vibes', cursive; font-weight: 400; font-size: clamp(3rem, 11vw, 5.5rem); text-shadow: 0 0 26px rgba(255, 77, 109, 0.6); }
-h1 span { display: inline-block; animation: latidoRec 1.6s ease-in-out infinite; }
-@keyframes latidoRec { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-.swiper-slide img {
-    border-radius: 20px;
-    box-shadow: 0 12px 40px rgba(255, 77, 109, 0.35);
-    border: 4px solid rgba(255, 255, 255, 0.85);
+.pagina {
+  position: relative;        /* por encima de los corazones flotantes */
+  z-index: 1;
+  width: 100%;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 64px 16px 48px;   /* el boton "Menu" flotante ocupa la esquina */
 }
-.swiper-container { position: relative; z-index: 1; }
+
+/* ---------- Marcador ---------- */
+.portada {
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 14px;
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-size: clamp(3rem, 14vw, 5rem);
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 0 26px rgba(255, 77, 109, 0.6);
+}
+
+.marcador {
+  display: inline-block;
+  padding: 0.1em 0.35em 0.2em;
+  border: 4px solid #2c0b12;
+  border-radius: 14px;
+  background: #130307;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.9),
+    0 0 0 2px rgba(255, 255, 255, 0.12),
+    0 14px 40px rgba(255, 42, 61, 0.28);
+}
+
+.cifra {
+  display: block;
+  font-family: "Doto", "Courier New", monospace;
+  font-weight: 900;
+  font-size: clamp(5.5rem, 30vw, 10rem);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--led);
+  text-shadow: 0 0 12px rgba(255, 42, 61, 0.85), 0 0 34px rgba(255, 42, 61, 0.55);
+}
+
+.sub {
+  margin: 18px 0 0;
+  color: var(--rosa-suave);
+  font-size: 1.15rem;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Fotos ---------- */
+.camino {
+  margin-top: 56px;
+}
+
+h2 {
+  margin: 0 0 20px;
+  text-align: center;
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  color: var(--rosa-suave);
+}
+
+.camino ol {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foto {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 120, 140, 0.25);
+  border-radius: 14px;
+  background: rgba(22, 6, 14, 0.8);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.foto img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.foto figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 16px 12px;
+}
+
+.pts {
+  font-family: "Doto", "Courier New", monospace;
+  font-weight: 900;
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--led);
+  text-shadow: 0 0 10px rgba(255, 42, 61, 0.6);
+}
+
+.delta {
+  color: var(--rosa-suave);
+  font-weight: 300;
+}
+
+/* La foto del récord actual destaca con un borde de luz. */
+.foto--actual {
+  border-color: rgba(255, 42, 61, 0.7);
+  box-shadow: 0 0 0 1px rgba(255, 42, 61, 0.35), 0 12px 36px rgba(255, 42, 61, 0.3);
+}
+
+.foto--actual .delta {
+  color: #fff;
+  font-weight: 400;
+}
+
+img[data-zoom]:focus-visible {
+  outline: 3px solid var(--rosa-suave);
+  outline-offset: -3px;
+}
+
+@media (min-width: 760px) {
+  .camino ol { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .foto figcaption { flex-direction: column; align-items: flex-start; gap: 4px; }
+}

@@ -1,355 +1,350 @@
-@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+/* La carta (index.html): un sobre sellado que se abre y despliega la carta.
+   Estado: #escena.abierto (lo cambia js/script.js). */
+
 * {
   box-sizing: border-box;
 }
 
-
-
-
-
-
-.boton-chat {
-  display: inline-block;
-  background-color: #ff4d4d;
-  color: white;
-  font-weight: bold;
-  font-family: 'Oswald', sans-serif;
-  padding: 12px 24px;
-  border-radius: 12px;
-  text-decoration: none;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+:root {
+  --noche: #1b0a17;
+  --papel: #fff4f6;
+  --tinta: #4a0f28;
+  --rosa: #ff4d6d;
+  --rosa-suave: #ffc2d1;
+  --vino: #8a1230;
 }
-
-.boton-chat:hover {
-  background-color: #ff1a1a;
-  transform: scale(1.05);
-}
-
 
 body {
-  font-family: "Varela Round", "Quicksand", sans-serif;
-  background: url('../img/background.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: black;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: "Kalam", "Segoe UI", sans-serif;
+  color: #fff;
+  background:
+    linear-gradient(rgba(27, 10, 23, 0.7), rgba(27, 10, 23, 0.9)),
+    url("../img/background.jpg") center / cover no-repeat;
+  background-color: var(--noche);
 }
 
-/* El wrap ancla la tarjeta de atras (postcard1) para que no use left:24%
-   fijo ni 800px que desbordaban el movil. */
-.wrap {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  padding: 6px;
-}
-
-.postcard {
-  width: 100%;
-  max-width: 800px;
-  min-height: 500px;
-  height: auto;
-  background: rgba(255, 255, 255, 0.101);
-
-  margin: 0 auto;
-  border-radius: 2%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 3em;
-  box-shadow: 0.8em 0.8em 15px rgba(0, 0, 0, 0.3);
-  -ms-transform: rotate(2.5deg); /* IE 9 */
-  -webkit-transform: rotate(2.5deg); /* Chrome, Safari, Opera */
-  transform: rotate(2.5deg);
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+.pagina {
+  position: relative;       /* por encima de los corazones flotantes */
   z-index: 1;
-  align-self: flex-start;
-}
-
-.postcard1 {
-  position: absolute;
-  left: -6px;
-  top: -6px;
-  right: -6px;
-  bottom: -6px;
-  /* Antes era un relleno rosado translucido que cubria toda la zona; ahora es
-     solo un borde que contornea el mensaje. */
-  background: transparent;
-  border: 3px solid rgba(245, 148, 184, 0.75);
-  z-index: 0;
-  margin: 0 auto;
-  border-radius: 2%;
   display: flex;
-  justify-content: space-between;
-  padding: 3em;
-  box-shadow: 0 0 18px rgba(245, 148, 184, 0.55);
-  -ms-transform: rotate(2.5deg); /* IE 9 */
-  -webkit-transform: rotate(2.5deg); /* Chrome, Safari, Opera */
-  transform: rotate(2.5deg);
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  pointer-events: none;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 64px 16px 32px;  /* el boton "Menu" flotante ocupa la esquina */
 }
 
 h1 {
+  margin: 0 0 24px;
   text-align: center;
-  font-size: clamp(2.2rem, 8vw, 4.5em);
-  color: #fdfdfd;
-  margin-bottom: 5px;
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-size: clamp(3rem, 15vw, 5rem);
+  line-height: 1.1;
+  background: linear-gradient(90deg, #ff9ebb, var(--rosa));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/*animation*/
-.postcard:hover,
-.postcard:active,
-.postcard:focus {
-  -ms-transform: rotate(0deg); /* IE 9 */
-  -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-  transform: rotate(0deg);
-  -moz-transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-.mail_stamp {
-  width: 100px;
-  float: right;
-}
-
-.push {
-  margin-bottom: 1em;
-  margin-top: 0.5em;
-}
-
-/*footer*/
-footer {
-  margin: 1em auto;
-  text-align: center;
-  font-family: "Varela Round", "Quicksand", sans-serif;
-  color: white;
-}
-
-footer p {
-  font-size: 1em;
-  letter-spacing: 1px;
-}
-p span {
-  font-size: 30px;
-  font-weight: 600;
-  text-shadow: 0 0 20px rgb(255, 255, 255);
-  color: #800020;
-}
-p {
-  font-size: clamp(1rem, 2.6vw, 22px);
-  font-family: cursive;
-  font-weight: 540;
-  word-break: break-word;
-}
-.ullu {
-  font-size: 25px;
-
-  text-shadow: 0 0 20px rgb(255, 255, 255);
-}
-.envlope-wrapper {
-  height: 380px;
-}
-#envelope {
-  margin: 0px;
+/* ---------- Sobre ---------- */
+.sobre {
+  --ancho: min(300px, 80vw);
   position: relative;
-  width: 280px;
-  height: 180px;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  margin-left: auto;
-  margin-right: auto;
-  top: 60px;
-  background-color: #f9c5c8;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: block;
+  width: var(--ancho);
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.5));
+  /* La solapa abierta sube por encima del sobre: se le hace sitio. */
+  transition: margin-top 0.5s ease;
 }
 
-.front {
+.abierto .sobre {
+  margin-top: calc(var(--ancho) * 0.39);   /* alto de la solapa: 58% de los 2/3 del ancho */
+}
+
+.sobre > span {
   position: absolute;
-  width: 0;
-  height: 0;
-  z-index: 3;
+  display: block;
 }
 
-.flap {
-  border-left: 140px solid transparent;
-  border-right: 140px solid transparent;
-  border-bottom: 82px solid transparent;
-  /* a little smaller */
-  border-top: 98px solid #ff3333;
-  /* a little larger */
-  transform-origin: top;
-  pointer-events: none;
-}
-
-.pocket {
-  border-left: 140px solid #ff9999;
-  border-right: 140px solid #ff9999;
-  border-bottom: 90px solid #fd8787;
-  border-top: 90px solid transparent;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.letter {
-  position: relative;
-
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  height: 90%;
-  top: 5%;
+.sobre__fondo {
+  inset: 0;
+  z-index: 1;
+  background: #b92c4c;
   border-radius: 6px;
-  box-shadow: 0 2px 26px rgba(0, 0, 0, 0.12);
 }
 
-.letter:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.words {
-  position: absolute;
-  left: 10%;
-  width: 80%;
-  height: 14%;
-  background-color: #fdb7ba;
-}
-
-.words.line1 {
-  top: 15%;
-  width: 20%;
-  height: 7%;
-}
-
-.words.line2 {
-  top: 30%;
-}
-
-.words.line3 {
-  top: 50%;
-}
-
-.words.line4 {
-  top: 70%;
-}
-
-.open .flap {
-  transform: rotateX(180deg);
-  transition: transform 0.4s ease, z-index 0.6s;
-  z-index: 1;
-}
-
-.close .flap {
-  transform: rotateX(0deg);
-  transition: transform 0.4s 0.6s ease, z-index 1s;
-  z-index: 5;
-}
-
-.close .letter {
-  transform: translateY(0px);
-  transition: transform 0.4s ease, z-index 1s;
-  z-index: 1;
-}
-
-.open .letter {
-  transform: translateY(-60px);
-  transition: transform 0.4s 0.6s ease, z-index 0.6s;
+/* Hojita que asoma al abrir. */
+.sobre__mini {
   z-index: 2;
-}
-
-.hearts {
-  position: absolute;
-  top: 90px;
-  left: 0;
-  right: 0;
-  z-index: 2;
-}
-
-.heart {
-  position: absolute;
-  bottom: 0;
-  right: 10%;
-  pointer-events: none;
-}
-
-.heart:before,
-.heart:after {
-  position: absolute;
-  content: "";
-  left: 50px;
-  top: 0;
-  width: 50px;
-  height: 80px;
-  background: #D00000;
-  border-radius: 50px 50px 0 0;
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
-  pointer-events: none;
-}
-
-.heart:after {
-  left: 0;
-  transform: rotate(45deg);
-  transform-origin: 100% 100%;
-}
-
-.close .heart {
-  opacity: 0;
-  -webkit-animation: none;
-          animation: none;
-}
-
-.reset {
-  text-align: center;
-  margin-top: -125px;
-}
-
-.reset button {
-  font-weight: 800;
-  font-style: normal;
-  transition: all 0.1s linear;
-  -webkit-appearance: none;
-  background-color: transparent;
-  border: solid 2px #ff5757;
+  inset: 8% 6% 6%;
   border-radius: 4px;
-  color: #ff5757;
-  display: inline-block;
-  font-size: 14px;
-  text-transform: uppercase;
-  margin: 5px;
-  padding: 10px;
-  line-height: 1em;
-  text-decoration: none;
-  min-width: 120px;
+  background:
+    linear-gradient(#e7a0b0, #e7a0b0) 12% 22% / 28% 6% no-repeat,
+    linear-gradient(#f2c3cd, #f2c3cd) 12% 44% / 76% 8% no-repeat,
+    linear-gradient(#f2c3cd, #f2c3cd) 12% 64% / 76% 8% no-repeat,
+    var(--papel);
+  transition: transform 0.4s ease;
+}
+
+.abierto .sobre__mini {
+  transform: translateY(-45%);
+  transition-delay: 0.4s;
+}
+
+/* Frente del sobre: los dos lados y el fondo, con la "V" de la solapa libre. */
+.sobre__bolsillo {
+  inset: 0;
+  z-index: 3;
+  background: #e0536f;
+  clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 0 0 6px 6px;
+}
+
+/* Solapa: una cara al frente y otra (mas oscura) al reverso para cuando se abre. */
+.sobre__solapa {
+  z-index: 4;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58%;
+  transform-origin: top;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease 0.45s, z-index 0s linear 0.45s;
+}
+
+.sobre__solapa::before,
+.sobre__solapa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  backface-visibility: hidden;
+}
+
+.sobre__solapa::before { background: #cf3a5a; }
+
+.sobre__solapa::after {
+  background: #96223f;
+  transform: rotateX(180deg);
+}
+
+.abierto .sobre__solapa {
+  z-index: 1;
+  transform: rotateX(180deg);
+  transition: transform 0.5s ease, z-index 0s linear 0.25s;
+}
+
+/* Sello con corazon que late hasta que se toca. */
+.sobre__sello {
+  z-index: 5;
+  top: 58%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: -1.4rem 0 0 -1.4rem;
+  border-radius: 50%;
+  background: var(--vino);
+  color: #ffd6df;
+  font-size: 1.35rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  animation: latido 1.6s ease-in-out infinite;
+  transition: opacity 0.25s ease;
+}
+
+.abierto .sobre__sello {
+  opacity: 0;
+  animation: none;
+  pointer-events: none;
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.14); }
+}
+
+.pista {
+  display: block;
+  margin: 18px auto 0;
+  padding: 6px 14px;
+  border: 0;
+  background: none;
+  color: var(--rosa-suave);
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(1.7rem, 6vw, 2.2rem);
+  text-shadow: 0 0 14px rgba(255, 77, 109, 0.7);
   cursor: pointer;
 }
 
-.reset button:hover {
-  background-color: #fc9d9d;
-  color: #a10000;
+/* ---------- Carta ---------- */
+.carta {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.6s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0.6s;
 }
 
-/* Aviso entre el boton de mensajes y el sobre */
-.aviso-carta {
-  margin: 10px 16px 0;
+.abierto .carta {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s,
+    opacity 0.6s ease 0.7s,
+    visibility 0s;
+}
+
+.carta__interior {
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px 4px 28px;
+  scroll-margin-top: 8px;
+}
+
+.papel {
+  position: relative;
+  padding: 2rem 1.4rem 1.8rem 3.2rem;
+  border-radius: 4px 4px 10px 10px;
+  background: var(--papel);
+  color: var(--tinta);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+/* Margen de cuaderno. */
+.papel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2.3rem;
+  width: 2px;
+  background: rgba(224, 83, 111, 0.45);
+}
+
+.papel p {
+  margin: 0 0 1rem;
+}
+
+.papel .saludo {
+  margin-bottom: 0.6rem;
+  font-family: "Great Vibes", cursive;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  color: var(--vino);
+}
+
+.papel .firma {
+  margin: 1.4rem 0 0;
+  text-align: right;
+  font-family: "Great Vibes", cursive;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  color: var(--vino);
+}
+
+.enlace {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--rosa);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(201, 24, 74, 0.35);
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.enlace:hover { background: #e63a5c; transform: translateY(-2px); }
+
+/* ---------- Botones ---------- */
+.acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.boton {
+  display: inline-block;
+  max-width: 100%;
+  padding: 12px 22px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff6b9d, #c9184a);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
   text-align: center;
-  color: #ffc2d1;
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(1.6rem, 6vw, 2.2rem);
-  text-shadow: 0 0 14px rgba(255, 77, 109, 0.7);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(255, 77, 109, 0.45);
+  transition: transform 0.15s ease;
+}
+
+.boton:hover { transform: scale(1.04); }
+
+.boton--suave {
+  background: transparent;
+  border-color: rgba(255, 194, 209, 0.55);
+  color: var(--rosa-suave);
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.sobre:focus-visible,
+.pista:focus-visible,
+.enlace:focus-visible,
+.boton:focus-visible {
+  outline: 3px solid var(--rosa-suave);
+  outline-offset: 3px;
+}
+
+footer {
+  margin-top: auto;         /* queda al fondo aunque la carta este cerrada */
+  padding-top: 24px;
+  text-align: center;
+  color: var(--rosa-suave);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 400px) {
+  .papel { padding-left: 2.8rem; font-size: 1.12rem; }
+  .papel::before { left: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sobre, .sobre__mini, .sobre__solapa, .carta, .abierto .carta,
+  .abierto .sobre__solapa, .abierto .sobre__mini {
+    transition-duration: 0s;
+    transition-delay: 0s;
+  }
+  .sobre__sello { animation: none; }
 }
