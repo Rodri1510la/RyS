@@ -244,18 +244,17 @@
 
       function mostrarVisto() {
         vistoEl.remove();
-        if (!lecturas) {
+        if (!lecturas || nombreInput.value !== "Rodrigo") {
           return;
         }
-        const yo = nombreInput.value;
-        const otro = Object.entries(lecturas).find(([persona, dato]) => persona !== yo && dato && dato.hasta);
-        if (!otro) {
+        const lecturaSilvana = lecturas.Silvana;
+        if (!lecturaSilvana || !lecturaSilvana.hasta) {
           return;
         }
-        const { hasta, cuando } = otro[1];
+        const { hasta, cuando } = lecturaSilvana;
         for (let i = registrosMensajes.length - 1; i >= 0; i--) {
           const registro = registrosMensajes[i];
-          if (registro.nombre === yo && registro.ts && registro.ts <= hasta) {
+          if (registro.nombre === "Rodrigo" && registro.ts && registro.ts <= hasta) {
             const hoy = claveDia(Date.now()) === claveDia(cuando || hasta);
             const momento = hoy ? formatearHora(cuando || hasta) : `${etiquetaDia(cuando || hasta)} ${formatearHora(cuando || hasta)}`;
             vistoEl.textContent = ` · Visto ${momento}`;
