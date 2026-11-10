@@ -34,7 +34,16 @@
       { clave: "risa", emoji: "😂", nombre: "Me da risa" },
       { clave: "ternura", emoji: "🥹", nombre: "Me emociona" },
       { clave: "amor", emoji: "😍", nombre: "Me gusta" },
-      { clave: "aplausos", emoji: "👏", nombre: "Aplausos" }
+      { clave: "aplausos", emoji: "👏", nombre: "Aplausos" },
+      { clave: "me_gusta", emoji: "👍", nombre: "Me gusta" },
+      { clave: "wow", emoji: "😮", nombre: "Me sorprende" },
+      { clave: "triste", emoji: "😢", nombre: "Me entristece" },
+      { clave: "abrazo", emoji: "🤗", nombre: "Te mando un abrazo" },
+      { clave: "beso", emoji: "😘", nombre: "Te mando un beso" },
+      { clave: "fuego", emoji: "🔥", nombre: "Me encanta" },
+      { clave: "fiesta", emoji: "🎉", nombre: "A celebrar" },
+      { clave: "fuerza", emoji: "💪", nombre: "Con fuerza" },
+      { clave: "ojitos", emoji: "🥰", nombre: "Con mucho amor" }
     ];
 
     function formatearHora(timestamp) {
@@ -177,6 +186,7 @@
         if (arriba < 8) {
           arriba = caja.bottom + 8;
         }
+        arriba = Math.max(8, Math.min(arriba, window.innerHeight - alto - 8));
         const alineadoDerecha = contexto.elemento.classList.contains("rodrigo");
         let izquierda = alineadoDerecha ? caja.right - ancho : caja.left;
         izquierda = Math.max(8, Math.min(izquierda, window.innerWidth - ancho - 8));
@@ -637,7 +647,10 @@
       position: fixed;
       z-index: 10;
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 2px;
+      width: min(236px, calc(100vw - 16px));
       padding: 5px 8px;
       border: 1px solid rgba(255, 158, 187, 0.3);
       border-radius: 999px;
@@ -648,8 +661,9 @@
     .selector-reacciones[hidden] { display: none; }
 
     .selector-reacciones button {
-      width: 42px;
-      height: 42px;
+      flex: 0 0 40px;
+      width: 40px;
+      height: 40px;
       padding: 0;
       border: 0;
       border-radius: 50%;
