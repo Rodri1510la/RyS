@@ -11,7 +11,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, onValue, update, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, onValue, update, get, query, limitToLast, orderByKey, startAt, endAt } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAJ9GKC0aZTJrFJUZYqAWfZFkH6gAMw0NA",
@@ -29,6 +29,7 @@
 
     const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
                    "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    const TAMANO_PAGINA = 50;
     const REACCIONES = [
       { clave: "corazon", emoji: "❤️", nombre: "Me encanta" },
       { clave: "risa", emoji: "😂", nombre: "Me da risa" },
@@ -81,6 +82,7 @@
       const nombreInput = document.getElementById("nombre");
       const mensajeInput = document.getElementById("mensaje");
       const chatBox = document.getElementById("chat-box");
+      const cargarAnterioresBtn = document.getElementById("cargar-anteriores");
       const enviarBtn = document.getElementById("enviar");
       const vacio = document.getElementById("vacio");
       const actualizarVistasReacciones = [];
@@ -139,11 +141,6 @@
           enviar();
         }
       });
-
-      // Si todavia no hay mensajes se ve un estado vacio bonito en lugar de una caja en blanco.
-      get(query(ref(db, "mensajes"), limitToLast(1)))
-        .then((snap) => { if (!snap.exists()) { vacio.hidden = false; } })
-        .catch(() => { vacio.hidden = false; });
 
       // ---------- Selector de reacciones (uno solo, flota sobre el mensaje) ----------
       const selector = document.createElement("div");
@@ -325,26 +322,22 @@
       });
 
       let ultimoDia = null;
+      const clavesRenderizadas = new Set();
+      const nodosMensajes = new Map();
+      const mensajesRef = ref(db, "mensajes");
 
-      onChildAdded(ref(db, "mensajes"), (data) => {
-        const msg = data.val();
-        vacio.hidden = true;
+      function crearSeparadorDia(timestamp) {
+        const separador = document.createElement("div");
+        separador.className = "dia";
+        separador.dataset.dia = claveDia(timestamp);
+        const etiqueta = document.createElement("span");
+        etiqueta.textContent = etiquetaDia(timestamp);
+        separador.appendChild(etiqueta);
+        return separador;
+      }
 
-        // Separador de dia cuando cambia la fecha.
-        if (msg.timestamp && claveDia(msg.timestamp) !== ultimoDia) {
-          ultimoDia = claveDia(msg.timestamp);
-          const sep = document.createElement("div");
-          sep.className = "dia";
-          const span = document.createElement("span");
-          span.textContent = etiquetaDia(msg.timestamp);
-          sep.appendChild(span);
-          chatBox.appendChild(sep);
-        }
-
+      function crearMensaje(msg, clave) {
         const clase = msg.nombre === "Silvana" ? "silvana" : "rodrigo";
-
-        // textContent (no innerHTML): cualquiera puede escribir en Firebase y un
-        // mensaje con etiquetas no debe ejecutarse en la pagina de todos.
         const div = document.createElement("div");
         div.className = `message ${clase} fade-in`;
 
@@ -388,9 +381,7 @@
 
         actualizarVistasReacciones.push(actualizarReacciones);
 
-        const contexto = { elemento: div, clave: data.key, votos };
-
-        // Tocar el mensaje o mantenerlo presionado abre las reacciones.
+        const contexto = { elemento: div, clave, votos };
         div.tabIndex = 0;
         div.setAttribute("role", "button");
         div.setAttribute("aria-haspopup", "true");
@@ -437,7 +428,7 @@
           }
         });
 
-        onValue(ref(db, `mensajes/${data.key}/reacciones`), (snapshot) => {
+        onValue(ref(db, `mensajes/${clave}/reacciones`), (snapshot) => {
           const guardadas = snapshot.val() || {};
           REACCIONES.forEach((reaccion) => {
             votos[reaccion.clave] = guardadas[reaccion.clave] || {};
@@ -455,15 +446,172 @@
         div.appendChild(horaDiv);
         div.appendChild(reaccionesDiv);
 
-        const registro = { ts: msg.timestamp || 0, nombre: msg.nombre, horaDiv };
+        const registro = { ts: msg.timestamp || 0, nombre: msg.nombre, horaDiv, clave };
         div._registro = registro;
-        registrosMensajes.push(registro);
+        nodosMensajes.set(clave, { div, msg, registro });
+        clavesRenderizadas.add(clave);
+        return { div, registro };
+      }
 
-        chatBox.appendChild(div);
+      function agregarMensajeAlFinal(msg, clave) {
+        if (clavesRenderizadas.has(clave)) {
+          return;
+        }
+        const estabaAlFinal = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 80;
+        const fragmento = document.createDocumentFragment();
+        const dia = msg.timestamp ? claveDia(msg.timestamp) : null;
+        if (dia && dia !== ultimoDia) {
+          fragmento.appendChild(crearSeparadorDia(msg.timestamp));
+          ultimoDia = dia;
+        }
+        const { div, registro } = crearMensaje(msg, clave);
+        fragmento.appendChild(div);
+        registrosMensajes.push(registro);
+        chatBox.appendChild(fragmento);
         observadorVisto.observe(div);
+        vacio.hidden = true;
         mostrarVisto();
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
+        if (estabaAlFinal) {
+          requestAnimationFrame(() => { chatBox.scrollTop = chatBox.scrollHeight; });
+        }
+      }
+
+      async function cargarMensajesAnteriores() {
+        const primerMensaje = registrosMensajes[0];
+        if (!primerMensaje || cargarAnterioresBtn.disabled) {
+          return;
+        }
+        cargarAnterioresBtn.disabled = true;
+        cargarAnterioresBtn.textContent = "Cargando...";
+        try {
+          const anterioresQuery = query(
+            mensajesRef,
+            orderByKey(),
+            endAt(primerMensaje.clave),
+            limitToLast(TAMANO_PAGINA + 2)
+          );
+          const snapshot = await get(anterioresQuery);
+          const anteriores = [];
+          snapshot.forEach((data) => {
+            if (data.key < primerMensaje.clave) {
+              anteriores.push({ clave: data.key, msg: data.val() });
+            }
+          });
+
+          const pagina = anteriores.slice(-TAMANO_PAGINA);
+          if (!pagina.length) {
+            cargarAnterioresBtn.hidden = true;
+            return;
+          }
+
+          const alturaAnterior = chatBox.scrollHeight;
+          const fragmento = document.createDocumentFragment();
+          const nuevosRegistros = [];
+          let diaPagina = null;
+          pagina.forEach(({ clave, msg }) => {
+            const dia = msg.timestamp ? claveDia(msg.timestamp) : null;
+            if (dia && dia !== diaPagina) {
+              fragmento.appendChild(crearSeparadorDia(msg.timestamp));
+              diaPagina = dia;
+            }
+            const { div, registro } = crearMensaje(msg, clave);
+            fragmento.appendChild(div);
+            nuevosRegistros.push(registro);
+          });
+          const primerElementoExistente = cargarAnterioresBtn.nextElementSibling;
+          if (diaPagina === claveDia(primerMensaje.ts) &&
+              primerElementoExistente && primerElementoExistente.classList.contains("dia")) {
+            primerElementoExistente.remove();
+          }
+          chatBox.insertBefore(fragmento, cargarAnterioresBtn.nextSibling);
+          registrosMensajes.unshift(...nuevosRegistros);
+          nuevosRegistros.forEach((registro) => {
+            const elemento = nodosMensajes.get(registro.clave).div;
+            observadorVisto.observe(elemento);
+          });
+          chatBox.scrollTop += chatBox.scrollHeight - alturaAnterior;
+          mostrarVisto();
+
+          if (anteriores.length <= TAMANO_PAGINA) {
+            cargarAnterioresBtn.hidden = true;
+          } else {
+            cargarAnterioresBtn.textContent = "Cargar mensajes anteriores";
+            cargarAnterioresBtn.disabled = false;
+          }
+        } catch (error) {
+          console.warn("[chat] no se pudieron cargar mensajes anteriores", error);
+          cargarAnterioresBtn.textContent = "Error al cargar; intenta de nuevo";
+          cargarAnterioresBtn.disabled = false;
+        }
+      }
+
+      cargarAnterioresBtn.addEventListener("click", cargarMensajesAnteriores);
+
+      async function iniciarChat() {
+        cargarAnterioresBtn.hidden = false;
+        cargarAnterioresBtn.disabled = true;
+        cargarAnterioresBtn.textContent = "Cargando mensajes...";
+        try {
+          const recientesQuery = query(
+            mensajesRef,
+            orderByKey(),
+            limitToLast(TAMANO_PAGINA + 1)
+          );
+          const snapshot = await get(recientesQuery);
+          const entradas = [];
+          snapshot.forEach((data) => {
+            entradas.push({ clave: data.key, msg: data.val() });
+          });
+          const pagina = entradas.slice(-TAMANO_PAGINA);
+          const fragmento = document.createDocumentFragment();
+
+          pagina.forEach(({ clave, msg }) => {
+            const dia = msg.timestamp ? claveDia(msg.timestamp) : null;
+            if (dia && dia !== ultimoDia) {
+              fragmento.appendChild(crearSeparadorDia(msg.timestamp));
+              ultimoDia = dia;
+            }
+            const { div, registro } = crearMensaje(msg, clave);
+            fragmento.appendChild(div);
+            registrosMensajes.push(registro);
+          });
+          chatBox.appendChild(fragmento);
+          pagina.forEach(({ clave }) => {
+            observadorVisto.observe(nodosMensajes.get(clave).div);
+          });
+
+          if (!pagina.length) {
+            vacio.hidden = false;
+          } else {
+            chatBox.scrollTop = chatBox.scrollHeight;
+          }
+
+          if (entradas.length <= TAMANO_PAGINA) {
+            cargarAnterioresBtn.hidden = true;
+          } else {
+            cargarAnterioresBtn.textContent = "Cargar mensajes anteriores";
+            cargarAnterioresBtn.disabled = false;
+          }
+
+          const ultimaClave = pagina.length ? pagina[pagina.length - 1].clave : null;
+          const mensajesEnVivo = ultimaClave
+            ? query(mensajesRef, orderByKey(), startAt(ultimaClave))
+            : mensajesRef;
+          onChildAdded(mensajesEnVivo, (data) => {
+            agregarMensajeAlFinal(data.val(), data.key);
+          }, (error) => {
+            console.warn("[chat] no se pudieron recibir mensajes", error);
+          });
+          mostrarVisto();
+        } catch (error) {
+          console.warn("[chat] no se pudieron cargar los mensajes", error);
+          cargarAnterioresBtn.hidden = true;
+          vacio.hidden = false;
+          vacio.querySelector("p").textContent = "No se pudieron cargar los mensajes. Intenta recargar la página.";
+        }
+      }
+
+      iniciarChat();
     });
   </script>
 
@@ -548,6 +696,21 @@
 
     #chat-box::-webkit-scrollbar { width: 6px; }
     #chat-box::-webkit-scrollbar-thumb { background: rgba(255, 77, 109, 0.6); border-radius: 6px; }
+
+    #cargar-anteriores {
+      align-self: center;
+      flex: none;
+      margin: 0 0 8px;
+      padding: 7px 16px;
+      border: 1px solid rgba(255, 158, 187, 0.35);
+      border-radius: 999px;
+      color: #ffc2d1;
+      background: rgba(40, 10, 32, 0.8);
+      font: inherit;
+      cursor: pointer;
+    }
+    #cargar-anteriores[hidden] { display: none; }
+    #cargar-anteriores:disabled { opacity: 0.65; cursor: wait; }
 
     .dia {
       align-self: center;
@@ -784,6 +947,7 @@
   </header>
 
   <main id="chat-box" aria-live="polite">
+    <button id="cargar-anteriores" type="button" hidden>Cargar mensajes anteriores</button>
     <div id="vacio" hidden>
       <span class="corazon" aria-hidden="true">💌</span>
       <p>Escríbeme algo bonito</p>
