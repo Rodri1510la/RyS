@@ -251,17 +251,19 @@
 
       function mostrarVisto() {
         vistoEl.remove();
-        if (!lecturas || nombreInput.value !== "Rodrigo") {
+        if (!lecturas) {
           return;
         }
-        const lecturaSilvana = lecturas.Silvana;
-        if (!lecturaSilvana || !lecturaSilvana.hasta) {
+        const yo = nombreInput.value;
+        const otro = yo === "Silvana" ? "Rodrigo" : "Silvana";
+        const lecturaOtro = lecturas[otro];
+        if (!lecturaOtro || !lecturaOtro.hasta) {
           return;
         }
-        const { hasta, cuando } = lecturaSilvana;
+        const { hasta, cuando } = lecturaOtro;
         for (let i = registrosMensajes.length - 1; i >= 0; i--) {
           const registro = registrosMensajes[i];
-          if (registro.nombre === "Rodrigo" && registro.ts && registro.ts <= hasta) {
+          if (registro.nombre === yo && registro.ts && registro.ts <= hasta) {
             const hoy = claveDia(Date.now()) === claveDia(cuando || hasta);
             const momento = hoy ? formatearHora(cuando || hasta) : `${etiquetaDia(cuando || hasta)} ${formatearHora(cuando || hasta)}`;
             vistoEl.textContent = ` · Visto ${momento}`;
@@ -629,8 +631,8 @@
       font-family: 'Oswald', 'Segoe UI', sans-serif;
       color: #fff;
       background:
-        linear-gradient(rgba(20, 5, 15, 0.82), rgba(35, 8, 30, 0.9)),
-        url("img/fondo.jpg") no-repeat center center fixed;
+        linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.52)),
+        url("img/AdiosJuntos.jpg") no-repeat center center fixed;
       background-size: cover;
       overflow: hidden;
     }
@@ -642,9 +644,9 @@
       flex-direction: column;
       align-items: center;
       padding: 10px 16px 8px;
-      background: rgba(30, 8, 25, 0.75);
+      background: rgba(0, 0, 0, 0.68);
       backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255, 158, 187, 0.25);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
       z-index: 2;
     }
@@ -655,7 +657,7 @@
       font-weight: 400;
       font-size: 2.2rem;
       line-height: 1.1;
-      background: linear-gradient(90deg, #ff9ebb, #ff4d6d);
+      background: linear-gradient(90deg, #ffffff, #bdbdbd);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -667,7 +669,7 @@
       gap: 10px;
       font-size: 0.85rem;
       font-weight: 300;
-      color: #ffc2d1;
+      color: #d9d9d9;
     }
 
     .avatar {
@@ -695,17 +697,17 @@
     }
 
     #chat-box::-webkit-scrollbar { width: 6px; }
-    #chat-box::-webkit-scrollbar-thumb { background: rgba(255, 77, 109, 0.6); border-radius: 6px; }
+    #chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.35); border-radius: 6px; }
 
     #cargar-anteriores {
       align-self: center;
       flex: none;
       margin: 0 0 8px;
       padding: 7px 16px;
-      border: 1px solid rgba(255, 158, 187, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 999px;
-      color: #ffc2d1;
-      background: rgba(40, 10, 32, 0.8);
+      color: #d9d9d9;
+      background: rgba(0, 0, 0, 0.7);
       font: inherit;
       cursor: pointer;
     }
@@ -722,7 +724,7 @@
       padding: 3px 14px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.12);
-      color: #ffc2d1;
+      color: #d9d9d9;
       font-size: 0.78rem;
       font-weight: 400;
       letter-spacing: 1px;
@@ -760,17 +762,18 @@
     .silvana {
       align-self: flex-start;
       background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 158, 187, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-bottom-left-radius: 4px;
     }
-    .silvana strong { color: #ffb3c6; }
+    .silvana strong { color: #ffffff; }
 
     .rodrigo {
       align-self: flex-end;
-      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      background: #f5f5f5;
+      color: #111;
       border-bottom-right-radius: 4px;
     }
-    .rodrigo strong { color: #ffe0e8; text-align: right; }
+    .rodrigo strong { color: #555; text-align: right; }
 
     .hora {
       margin-top: 2px;
@@ -795,15 +798,15 @@
 
     .reaccion {
       padding: 1px 7px;
-      border: 1px solid rgba(255, 158, 187, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 999px;
       color: #fff;
-      background: #3a1230;
+      background: #1c1c1c;
       font-size: 0.82rem;
       line-height: 1.5;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     }
-    .reaccion.seleccionada { border-color: #ff9ebb; background: #7a1d45; }
+    .reaccion.seleccionada { border-color: #ffffff; background: #3a3a3a; }
 
     /* ---------- Selector flotante ---------- */
     .selector-reacciones {
@@ -815,9 +818,9 @@
       gap: 2px;
       width: min(236px, calc(100vw - 16px));
       padding: 5px 8px;
-      border: 1px solid rgba(255, 158, 187, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 999px;
-      background: rgba(40, 10, 32, 0.96);
+      background: rgba(12, 12, 12, 0.96);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
       animation: selector-entra 0.16s ease-out;
     }
@@ -838,7 +841,7 @@
     }
     .selector-reacciones button:hover,
     .selector-reacciones button:focus-visible { transform: scale(1.25); outline: none; }
-    .selector-reacciones button.seleccionada { background: rgba(255, 77, 109, 0.4); }
+    .selector-reacciones button.seleccionada { background: rgba(255, 255, 255, 0.22); }
 
     @keyframes selector-entra {
       from { opacity: 0; transform: translateY(6px) scale(0.9); }
@@ -863,7 +866,7 @@
       margin: 6px 0 0;
       font-family: 'Great Vibes', cursive;
       font-size: 2rem;
-      color: #ffc2d1;
+      color: #d9d9d9;
     }
     @keyframes latido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
 
@@ -874,9 +877,9 @@
       align-items: flex-end;
       gap: 8px;
       padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
-      background: rgba(30, 8, 25, 0.85);
+      background: rgba(0, 0, 0, 0.78);
       backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255, 158, 187, 0.25);
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
     }
 
     select, textarea {
@@ -884,7 +887,7 @@
       font-size: 16px;               /* 16px evita el zoom automatico de iOS */
       color: #fff;
       background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 158, 187, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 20px;
       padding: 10px 14px;
       outline: none;
@@ -902,8 +905,8 @@
       line-height: 1.35;
     }
     textarea::placeholder { color: rgba(255, 255, 255, 0.5); }
-    textarea:focus, select:focus { border-color: #ff4d6d; box-shadow: 0 0 0 2px rgba(255, 77, 109, 0.3); }
-    textarea.error { border-color: #ff2a2a; animation: temblor 0.3s; }
+    textarea:focus, select:focus { border-color: #ffffff; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22); }
+    textarea.error { border-color: #ffffff; animation: temblor 0.3s; }
     @keyframes temblor { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
     button#enviar {
@@ -912,19 +915,18 @@
       height: 44px;
       border: 0;
       border-radius: 50%;
-      background: linear-gradient(135deg, #ff6b9d, #c9184a);
-      color: #fff;
+      background: #f5f5f5;
+      color: #111;
       font-size: 1.2rem;
       cursor: pointer;
-      box-shadow: 0 0 14px rgba(255, 77, 109, 0.6);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
       transition: transform 0.15s;
     }
     button#enviar:hover:not(:disabled) { transform: scale(1.1); }
     button#enviar:disabled { opacity: 0.5; cursor: default; }
 
-    /* El boton flotante "Menu" ocupa la esquina izquierda: la cabecera se desplaza. */
     @media (max-width: 520px) {
-      .cabecera { padding-left: 100px; padding-right: 12px; align-items: flex-start; }
+      .cabecera { padding-left: 16px; padding-right: 12px; align-items: flex-start; }
       .cabecera h1 { font-size: 1.9rem; }
     }
 
@@ -933,7 +935,6 @@
       #chat-box { scroll-behavior: auto; }
     }
   </style>
-  <link rel="stylesheet" href="css/nav.css">
 </head>
 <body>
 
@@ -963,6 +964,5 @@
     <button id="enviar" type="button" aria-label="Enviar">➤</button>
   </div>
 
-  <script src="js/nav.js" defer></script>
 </body>
 </html>

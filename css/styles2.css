@@ -47,7 +47,7 @@ body {
   height: 52px;
   border: none;
   border-radius: 50%;
-  background: rgba(204, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.8);
   color: #fff;
   font-size: 22px;
   cursor: pointer;
@@ -55,6 +55,11 @@ body {
 }
 
 /* ---- Mejora visual: entrada suave y tarjeta elegante ---- */
-body { background: radial-gradient(circle at 50% 20%, #24101c, #07070e 70%); }
-.card { background: linear-gradient(160deg, #fff, #ffeef2); border: 1px solid rgba(255, 158, 187, 0.4); }
+body {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.86)),
+    url("../img/AdiosJuntos.jpg") center center / cover no-repeat fixed;
+}
+.card { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.12); }
+.card h1 { color: #111111; }
 .card.reveal { transition-duration: 1.6s; }
