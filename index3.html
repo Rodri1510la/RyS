@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Y S</title>
+    <link rel="icon" href="img/flowers.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/efectos.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/nav.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJFXE1WZ5T"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RJFXE1WZ5T');
+    </script>
+</head>
+<body data-hearts>
+
+<main class="pagina" id="escena">
+    <h1>Rod &amp; Silv</h1>
+
+    <!-- El sobre es lo primero que se ve: al tocarlo se abre y la carta se despliega debajo. -->
+    <button class="sobre" id="sobre" type="button" tabindex="-1" aria-hidden="true">
+        <span class="sobre__fondo"></span>
+        <span class="sobre__mini"></span>
+        <span class="sobre__bolsillo"></span>
+        <span class="sobre__solapa"></span>
+        <span class="sobre__sello">&#10084;</span>
+    </button>
+
+    <button class="pista" id="pista" type="button" aria-expanded="false" aria-controls="carta">Toca el sobre para abrirlo</button>
+
+    <section class="carta" id="carta" aria-label="Carta para Silv">
+        <div class="carta__interior">
+            <article class="papel">
+                <p class="saludo">Mi Muñequita,</p>
+                <p>Siempre quisiste que te escriba una carta, así que hice esto para ti. Esta imagen me hace acordar a nosotros en la playa, ¿quién iba a pensar todo lo que nos depararía el destino? Jum, pero estoy feliz de cada cosa que viví a tu lado.</p>
+                <p>Me hiciste muy feliz, niñita. Gracias por eso y por los momentos lindos, apasionados, tiernos y llenos de risa.</p>
+                <p>Me hubiera gustado darte la carta en persona, pero bueno... al menos soy chistemas. Besos, y recuerda buscarme en los tulipanes y siempre en recuerdos bonitos.</p>
+                <p>Recuerda que siempre estaremos aquí... en esta página y en nuestros corazones, y también aquí:</p>
+                <p><a class="enlace" href="https://drive.google.com/drive/folders/1DdNf_kprWidRtUxc4qpgSfvuiJtFhhfm?usp=sharing" target="_blank" rel="noopener">Nuestros recuerdos en Drive</a></p>
+                <p class="firma">Siempre tuyo, Mor,<br>Pollito Rod</p>
+            </article>
+
+            <div class="acciones">
+                <a href="mensajes.html" class="boton"><span aria-hidden="true">💌</span> Déjame mensajes aquí cuando me extrañes</a>
+                <button type="button" class="boton boton--suave" id="pdf">Descargar mi carta en PDF</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>Hecho por tu Chinito 💕</footer>
+</main>
+
+<script src="js/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    // jsPDF no puede usar la URL del <img> directamente: addImage solo acepta
+    // data URLs o canvas. Se carga la imagen, se pasa a un canvas y de ahi al
+    // PDF. Con la ruta relativa ademas funciona abriendo la pagina en local.
+    function indexLoadImage(url) {
+        return new Promise(function (resolve, reject) {
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function () { resolve(img); };
+            img.onerror = function () { reject(new Error("no cargo la imagen: " + url)); };
+            img.src = url;
+        });
+    }
+
+    document.getElementById("pdf").addEventListener("click", async function () {
+        // Sin jsPDF (CDN caido o sin internet) no hay nada que generar.
+        if (typeof window.jspdf === "undefined") {
+            console.warn("[index] jsPDF no cargo");
+            return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        // Dimensiones y márgenes
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 20; 
+        const lineHeight = 7;
+        const maxWidth = pageWidth - (margin * 2);
+        let y = 55; // Posición inicial
+
+        // Función para agregar nueva página con el mismo formato
+        function addNewPage() {
+            doc.addPage();
+            doc.setFillColor(255, 228, 225); // Fondo rosa claro
+            doc.rect(10, 10, 190, 277, "F"); // Fondo decorativo
+            doc.setDrawColor(255, 105, 180); // Borde rosado
+            doc.rect(15, 15, 180, 267); // Marco interno
+            y = 55; 
+        }
+
+        // Establecer fondo y bordes en la primera página
+        doc.setFillColor(255, 228, 225);
+        doc.rect(10, 10, 190, 277, "F");
+        doc.setDrawColor(255, 105, 180);
+        doc.rect(15, 15, 180, 267);
+
+        // Título
+        doc.setFont("times", "bold");
+        doc.setFontSize(20);
+        doc.text("Para Mi Gotica <3", pageWidth / 2, 35, { align: "center" });
+
+        // Texto de la carta
+        doc.setFont("times", "italic");
+        doc.setFontSize(12); 
+        const texto = `Amo Chito,
+
+Se que querias una carta a mano y si la he escrito, pero no se si te volvere a ver siendo sincero. 
+Te extraño cada segundo, pero eso siempre me ha pasado, jum. Tengo ganas de abrazarte fuerte y no soltarte, 
+pero esas siempre las he tenido. Quiero besarte hasta que ambos nos separemos y nos demos ese besito que 
+significa que el beso largo acabo... quiero todo contigo, pero todo lo bonito y más.
+
+Me hubiera encantado darnos el adios el día donde empezó todo y despedirme de una manera bonita, 
+dándote un día que no olvidarias y así me recuerdes bien, sabes bien que tu pollito te ama mucho.
+
+Es fácil para ti irte, pero como dijo Ted, si simplemente te vas, no es amor... y como hablamos el  
+último día, sé que me entiendes y yo quisiera que me perdones. Para mí jamás ha habido persona 
+que se compare con la mujer que amo, y yo Te Amo, Tonta.
+
+Mi letra es horrible eh, ojalá jamás veas la carta física, pero más o menos dice lo mismo que aquí. 
+
+Eres mi amor de verano, días de amor primaveral, mi invierno y mi otoño, eres todas esas canciones de 
+la playlist y más. Eres la sonrisa que me ilumina, oh, y sí chito, mi hogar, porque una vez 
+que te besé y te abracé supe que no quería a nadie más.
+
+Si hay faltas ortográficas no juzgues oh, te pasas -_-, en los programas para programar no hay corrección 
+de ortografía y en físico pss bueno :V yo no soy tan crack como vos, mi abogada hermosa.
+
+También sé que puedo ser insoportable, y un pollito sentimental, que maybe llora al escuchar nuestras 
+canciones de fondo y escribir esto... capaz sí, capaz no, jeje, ya me conoces.
+
+Leí tus regalos y jum, amo cada una de tus letras... porque amo todo de ti, hasta tu letra.
+Jum, besos mi aaaaaaaaaaaaaaa mochito.
+
+Espero poder volverte a abrazar nuevamente, espero poder besarte y que tus labios sean míos para siempre 
+como los míos son tuyos. Espero... y me esperes, porque yo no quiero a nadie más que vos.
+
+Te Amo, beso en la frente y abrazo chito chito.
+
+Team R y S no?,
+Tu Chinito <3`;
+
+        // Dividir texto en líneas dentro del área segura
+        const lines = doc.splitTextToSize(texto, maxWidth);
+        lines.forEach(line => {
+            if (y + lineHeight > pageHeight - margin) {
+                addNewPage();
+            }
+            doc.text(line, margin + 5, y);
+            y += lineHeight;
+        });
+
+        // Agregar la imagen después del texto
+        const imgUrl = "img/manitos.png";
+        const imgWidth = 60; // Tamaño de la imagen
+        const imgHeight = 60;
+
+        // Si la imagen no cabe en la misma página, añadir una nueva
+        if (y + imgHeight + 10 > pageHeight - margin) {
+            addNewPage();
+        }
+
+        try {
+            const img = await indexLoadImage(imgUrl);
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext("2d").drawImage(img, 0, 0);
+            doc.addImage(canvas.toDataURL("image/png"), "PNG", (pageWidth - imgWidth) / 2, y + 10, imgWidth, imgHeight);
+        } catch (err) {
+            console.warn("[index] " + err.message);
+        }
+
+        // Guardar PDF
+        doc.save("Carta_para_Silv.pdf");
+    });
+</script>
+
+
+  <script src="js/efectos.js" defer></script>
+  <script src="js/nav.js" defer></script>
+</body>
+</html>
